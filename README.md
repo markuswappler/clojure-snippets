@@ -1,15 +1,34 @@
-# clojure-snippets
+# Clojure snippets
 
-I'm an app. Or maybe I'm a library? I haven't decided yet. 
+This is repo contains small pieces of Clojure code. 
+It may be explorations, puzzle solving code, 
+or samples of interesting concepts.
 
-The choice is up to you!
+## Queens
 
-## Usage
+Functional solver of the [Eight queens puzzle][q].
 
-FIXME
+[q]: http://en.wikipedia.org/wiki/Eight_queens_puzzle "Wikipedia"
+
+## Mastermind
+
+Implementation of the [Mastermind game][m1]. 
+Provides two solving functions based on the 
+[Five guess algorithm][m2] of [Donald Knuth][m5]
+and the [Six guess algorithm][m3] of [Don Greenwell][m6]. 
+Check out [MathWorld][m4] for more mathematical details.
+
+[m1]: http://en.wikipedia.org/wiki/Mastermind_(board_game) "Wikipedia"
+[m2]: http://en.wikipedia.org/wiki/Mastermind_(board_game)#Five-guess_algorithm
+      "Wikipedia"
+[m3]: http://en.wikipedia.org/wiki/Mastermind_(board_game)#Six-guess_algorithm
+      "Wikipedia"
+[m4]: http://mathworld.wolfram.com/Mastermind.html "Wolfram MathWorld"
+[m5]: http://en.wikipedia.org/wiki/Donald_Knuth "Wikipedia"
+[m6]: http://math2.eku.edu/greenwell/ "Homepage"
 
 ## License
 
-Copyright © 2012 FIXME
+Copyright © 2012-13 Markus Wappler.
 
 Distributed under the Eclipse Public License, the same as Clojure.
