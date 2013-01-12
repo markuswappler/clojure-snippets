@@ -1,3 +1,4 @@
+/bin
 /target
 /lib
 /classes
@@ -8,3 +9,6 @@ pom.xml
 .lein-deps-sum
 .lein-failures
 .lein-plugins
+.settings
+.classpath
+.project

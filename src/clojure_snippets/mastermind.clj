@@ -8,7 +8,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helper functions 
-;; independent from code length and number of colors
+;; independent of code length and number of colors
 
 (defn compare [code guess]
   (let [exact (->> (interleave code guess)
