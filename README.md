@@ -14,8 +14,8 @@ Functional solver of the [Eight queens puzzle][q].
 
 Implementation of the [Mastermind game][m1]. 
 Provides two solving functions based on the 
-[Five guess algorithm][m2] of [Donald Knuth][m5]
-and the [Six guess algorithm][m3] of [Don Greenwell][m6]. 
+[Five guess algorithm][m2] by [Donald Knuth][m5]
+and the [Six guess algorithm][m3] by [Don Greenwell][m6]. 
 Check out [MathWorld][m4] for more mathematical details.
 
 [m1]: http://en.wikipedia.org/wiki/Mastermind_(board_game) "Wikipedia"
