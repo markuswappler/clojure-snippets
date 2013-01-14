@@ -9,14 +9,12 @@
       (= dx dy) 
       (= dx (- dy)))))
 
-(defn add-queen [n ys]
-  (let [qs (map-indexed #(vector %1 %2) ys)
-        x (count ys)
-        possible (for [y (range n)
-                       :when (not-any? (partial conflict? [x y]) qs)]
-                   y)]
-    (map (partial conj ys) possible)))
-
 (defn solve [n]
-  (let [solve-one-more (fn [qs] (mapcat (partial add-queen n) qs))]
-    (nth (iterate solve-one-more [[]]) n)))
+  (let [next-queens-1 (fn [ys]
+                        (let [qs (map-indexed #(vector %1 %2) ys)
+                              x (count ys)]
+                          (for [y (range n)
+                                :when (not-any? (partial conflict? [x y]) qs)]
+                            (conj ys y))))
+        next-queens (fn [yss] (mapcat next-queens-1 yss))]
+    (nth (iterate next-queens [[]]) n)))        
