@@ -4,7 +4,7 @@
 
 (ns clojure-snippets.mastermind
   (:refer-clojure :exclude [compare])
-  (:use [clojure.math.combinatorics :only (cartesian-product)]))
+  (:use [clojure.math.combinatorics :only (selections)]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helper functions 
@@ -64,7 +64,7 @@
 
 (defn five-guess [query]
   (loop [guess [:blue :blue :cyan :cyan]
-         codes (cartesian-product colors colors colors colors)         
+         codes (selections colors 4)         
          history []]
     (let [result {:guess guess :result (query guess)}                        
           codes (exclude result codes)
@@ -81,7 +81,7 @@
                        [:orange :red :cyan :orange]
                        [:red :yellow :red :yellow]
                        [:yellow :yellow :orange :green]])
-         codes (cartesian-product colors colors colors colors)]  
+         codes (selections colors 4)]  
     (if (empty? results)
       (first codes)
       (recur (rest results) (exclude (first results) codes)))))
