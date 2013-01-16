@@ -4,7 +4,7 @@
 
 (ns clojure-snippets.mastermind
   (:refer-clojure :exclude [compare])
-  (:use [clojure.math.combinatorics :only (selections)]))
+  (:use [clojure.math.combinatorics :only [selections]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helper functions 
@@ -62,26 +62,38 @@
       ([] code)
       ([guess] (compare code guess)))))
 
-(defn five-guess [query]
-  (loop [guess [:blue :blue :cyan :cyan]
-         codes (selections colors 4)         
+(defn solve [next-guess query]  
+  (loop [guess (next-guess)
+         codes (selections colors 4)
          history []]
-    (let [result {:guess guess :result (query guess)}                        
+    (let [result {:guess guess :result (query guess)}
           codes (exclude result codes)
+          guess (next-guess codes)
           history (conj history result)]
-      (if (= 1 (count codes))
+      (if (nil? guess)
         (conj history (first codes))
-        (recur (minimax codes) codes history)))))
+        (recur guess codes history)))))
+
+(defn five-guess [query]
+  (let [next-guess (fn
+                     ([] [:blue :blue :cyan :cyan])
+                     ([codes]
+                       (if (= 1 (count codes))
+                         nil
+                         (minimax codes))))]
+    (solve next-guess query)))
 
 (defn six-guess [query]
-  (loop [results (map (fn [guess] {:guess guess :result (query guess)})
-                      [[:blue :cyan :cyan :blue]
+  (let [guesses (atom [[:blue :cyan :cyan :blue]
                        [:cyan :green :red :orange]
                        [:green :green :blue :blue]
                        [:orange :red :cyan :orange]
                        [:red :yellow :red :yellow]
                        [:yellow :yellow :orange :green]])
-         codes (selections colors 4)]  
-    (if (empty? results)
-      (first codes)
-      (recur (rest results) (exclude (first results) codes)))))
+        next-guess (fn ng
+                     ([]
+                       (let [guess (first @guesses)]
+                         (swap! guesses rest)
+                         guess))
+                     ([codes] (ng)))]
+    (solve next-guess query)))

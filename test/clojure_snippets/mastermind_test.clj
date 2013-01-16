@@ -117,7 +117,9 @@
       (is (>= 5 guesses)))))
 
 (deftest test-six-guess
-  (let [run (fn [code] (six-guess (make-query code)))]
+  (let [run (fn [code]
+              (let [history (six-guess (make-query code))]
+                (last history)))]
     (is (= [:blue :blue :green :yellow] (run [:blue :blue :green :yellow])))
     (is (= [:green :orange :red :yellow] (run [:green :orange :red :yellow])))
     (is (= [:green :green :green :green] (run [:green :green :green :green])))))
