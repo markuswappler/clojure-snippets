@@ -30,7 +30,7 @@ Check out [MathWorld][m4] for more mathematical details.
 ## Expressions
 
 Interpreting arithmetic expressions via [Parser combinators][e1].
-Uses [Parsatron][e2] as library. This is currently in progress,
+Uses [The Parsatron][e2] as library. This is currently in progress,
 targeting a simple scripting language. Not for use, but for fun.
 
 [e1]: http://en.wikipedia.org/wiki/Parser_combinator "Wikipedia"
