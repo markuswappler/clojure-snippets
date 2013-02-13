@@ -68,18 +68,16 @@
          history []]
     (let [result {:guess guess :result (query guess)}
           codes (exclude result codes)
-          guess (next-guess codes)
           history (conj history result)]
-      (if (nil? guess)
-        (conj history (first codes))
-        (recur guess codes history)))))
+      (if-let [guess (next-guess codes)]
+        (recur guess codes history)
+        (conj history (first codes))))))
 
 (defn five-guess [query]
   (let [next-guess (fn
                      ([] [:blue :blue :cyan :cyan])
                      ([codes]
-                       (if (= 1 (count codes))
-                         nil
+                       (if-not (= 1 (count codes))                         
                          (minimax codes))))]
     (solve next-guess query)))
 
