@@ -9,18 +9,17 @@
   [m e]  
   (* m (numeric/expt 10 e)))
 
-(defn fib-fn 
+(defn make-fib 
   "Returns a function that takes two arguments [a0 a1] and
   returns a lazy (generalized Fibonacci) sequence of 
   a0, a1, (+ (* c0 a0) (* c1 a1)), 
   (+ (* c0 a1) (* c1 (+ (* c0 a0) (* c1 a1)))) etc."
   [c0 c1]
-  (fn [a0 a1]
-    (->> 
-      (iterate (fn [[a b]] [b (+ (* c0 a) (* c1 b))]) [a0 a1])
-      (map first))))
+  (fn fib [a0 a1] 
+    (lazy-seq 
+      (cons a0 (fib a1 (+ (* c0 a0) (* c1 a1)))))))
 
-(defn binom 
+(defn binom
   "binomial coefficient"
   [n k]
   (if (> k (- n k))
@@ -37,9 +36,9 @@
                       [m (- (* 2 m) n)]
                       [m (+ (* 2 m) n)]]
                      (filter (fn [[n m]] (pred n m)))))
-        walk (traversal/walk-fn :depth :pre 
-                                (constantly true) identity identity 
-                                children)]
+        walk (traversal/make-walk :depth :pre 
+                                  (constantly true) identity identity 
+                                  children)]
     (walk [1 2] [1 3])))
 
 ;; 1
@@ -60,12 +59,12 @@
 
 ;; 2
 ;; Every third Fibonacci number is even: 2, 8, 34, 144, ...
-;; fib(k) = 4 * fib(k - 3) + fib(k - 6) 
+;; fk = 4 * fk-3 + fk-6 
 
 (defn solve-2 []
   (let [bound (integer 4 6)]
     (->> 
-      ((fib-fn 1 4) 2 8)
+      ((make-fib 1 4) 2 8)
       (take-while (fn [a] (>= bound a)))
       (reduce +))))
 
@@ -81,9 +80,4 @@
 
 (defn solve-351 []
   (let [bound (integer 10 8)]
-    (coprimes (fn [n m] (>= bound (+ n m))))))
-
-;; 354
-;; TODO
-
-(defn solve-354 [])
+    (count (coprimes (fn [n m] (>= bound (+ n m)))))))
