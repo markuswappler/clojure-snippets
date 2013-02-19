@@ -17,4 +17,4 @@
                                 :when (not-any? (partial conflict? [x y]) qs)]
                             (conj ys y))))
         next-queens (fn [yss] (mapcat next-queens-1 yss))]
-    (nth (iterate next-queens [[]]) n)))        
+    (nth (iterate next-queens [[]]) n)))     
