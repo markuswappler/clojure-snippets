@@ -4,7 +4,7 @@
 
 (ns clojure-snippets.mastermind
   (:refer-clojure :exclude [compare])
-  (:use [clojure.math.combinatorics :only [selections]]))
+  (:require [clojure.math.combinatorics :as comb]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helper functions 
@@ -64,7 +64,7 @@
 
 (defn solve [next-guess query]  
   (loop [guess (next-guess)
-         codes (selections colors 4)
+         codes (comb/selections colors 4)
          history []]
     (let [result {:guess guess :result (query guess)}
           codes (exclude result codes)
