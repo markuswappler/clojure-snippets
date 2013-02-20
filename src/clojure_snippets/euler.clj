@@ -41,14 +41,31 @@
       (take-while (fn [a] (>= n a)))
       (reduce +))))
 
+;; 7
+;; The nth prime is about n * log(n).
+;; Thus, take 2n * log(n) as upper bound
+
+(defn solve-7
+  ([] (solve-7 (inc (int-exp 1 4))))
+  ([n] 
+    (->> 
+      (math/primes (numeric/round (* 2 n (Math/log n))))
+      (drop (dec n))
+      (first)))) 
+
+;; 10
+
+(defn solve-10
+  ([] (solve-10 (int-exp 2 6)))
+  ([n] (reduce + (math/primes (dec n)))))
+
 ;; 15
 ;; make 2n decisions: right or down
 ;; choose n down-decisions from all decisions
 
 (defn solve-15 
   ([] (solve-15 20))
-  ([n]
-    (math/binom (* 2 n) n)))
+  ([n] (math/binom (* 2 n) n)))
 
 ;; 351
 ;; TODO

@@ -11,5 +11,11 @@
 (deftest test-solve-2
   (is (= (+ 2 8 34) (solve-2 89))))
 
+(deftest test-solve-7
+  (is (= '(2 3 5 7 11 13) (map solve-7 (range 1 7)))))
+
+(deftest test-solve-10
+  (is (= (+ 2 3 5 7) (solve-10 10))))
+
 (deftest test-solve-15
   (is (= 6 (solve-15 2))))
