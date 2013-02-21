@@ -70,14 +70,15 @@
 (defn solve-351 
   ([] (solve-351 (int-exp 1 8)))
   ([n]
-    (letfn [(covered [p q] 
-                     (dec (quot n (+ p q))))
-            (covered-all [p q]
-                         (future
-                           (->> (math/coprimes p q #(< 0 (covered %1 %2)))
-                             (map (partial apply covered))
-                             (reduce +))))]
+    (let [covered (fn [p q] 
+                    (dec (quot n (+ p q))))
+          covered-all (fn [p q]
+                        (->> (math/coprimes p q #(< 0 (covered %1 %2)))
+                          (map (partial apply covered))
+                          (reduce +)))
+          covered-12 (future (covered-all 1 2))
+          covered-13 (future (covered-all 1 3))]
       (+ (* 6 (covered 0 1))
          (* 6 (covered 1 1))
-         (* 12 @(covered-all 1 2))
-       (* 12 @(covered-all 1 3))))))
+         (* 12 @covered-12)
+         (* 12 @covered-13)))))
