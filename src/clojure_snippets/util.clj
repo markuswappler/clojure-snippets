@@ -1,5 +1,10 @@
 (ns clojure-snippets.util)
 
+(defmacro dbg [x]
+  `(let [x# ~x]
+     (println "dbg:" '~x "->" x#)
+     x#))
+
 (defn interleave-all [c1 c2]
   (lazy-seq
     (let [s1 (seq c1) s2 (seq c2)]
@@ -20,4 +25,4 @@
   (lazy-seq
     (if (not-empty seq)
       (cons (first seq) (post-cons x (rest seq)))
-      [x])))    
+      [x])))

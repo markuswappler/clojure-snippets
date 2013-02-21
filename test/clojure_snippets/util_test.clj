@@ -2,6 +2,11 @@
   (:use clojure.test
         clojure-snippets.util))
 
+(deftest dbg-test
+  (is (= 7 (dbg (+ 3 4))))
+  (is (= "dbg: (+ 3 4) -> 7\r\n" 
+         (with-out-str (dbg (+ 3 4))))))
+
 (deftest interleave-all-test
   (is (= '(1 4 2 5 3 6)
          (interleave-all [1 2 3] [4 5 6])))
@@ -32,4 +37,4 @@
 
 (deftest test-post-cons
   (is (= '(1 2 3 4) (post-cons 4 [1 2 3])))
-  (is (= '(1 2 3 4) (post-cons 4 '(1 2 3)))))           
+  (is (= '(1 2 3 4) (post-cons 4 '(1 2 3)))))

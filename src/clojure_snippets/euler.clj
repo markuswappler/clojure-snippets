@@ -66,15 +66,18 @@
   ([n] (math/binom (* 2 n) n)))
 
 ;; 351
-;; TODO
 
-(defn solve-351 []
-  (let [pred (fn [n m] (> 10000 (+ n m)))]
-    (count (math/coprimes pred))))
-
-(defn solve-351-async []
-  (let [pred (fn [n m] (> 10000 (+ n m)))
-        odd (future (count (math/coprimes 1 2 pred)))
-        even (future (count (math/coprimes 1 3 pred)))]
-    (+ @odd @even)))
-     
+(defn solve-351 
+  ([] (solve-351 (int-exp 1 8)))
+  ([n]
+    (letfn [(covered [p q] 
+                     (dec (quot n (+ p q))))
+            (covered-all [p q]
+                         (future
+                           (->> (math/coprimes p q #(< 0 (covered %1 %2)))
+                             (map (partial apply covered))
+                             (reduce +))))]
+      (+ (* 6 (covered 0 1))
+         (* 6 (covered 1 1))
+         (* 12 @(covered-all 1 2))
+       (* 12 @(covered-all 1 3))))))
