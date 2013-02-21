@@ -47,11 +47,9 @@
 
 (defn solve-7
   ([] (solve-7 (inc (int-exp 1 4))))
-  ([n] 
-    (->> 
-      (math/primes (numeric/round (* 2 n (Math/log n))))
-      (drop (dec n))
-      (first)))) 
+  ([n]
+    (nth (math/primes (numeric/round (* 2 n (Math/log n)))) 
+         (dec n))))
 
 ;; 10
 
@@ -71,5 +69,12 @@
 ;; TODO
 
 (defn solve-351 []
-  (let [bound (int-exp 10 8)]
-    (count (math/coprimes (fn [n m] (>= bound (+ n m)))))))
+  (let [pred (fn [n m] (> 10000 (+ n m)))]
+    (count (math/coprimes pred))))
+
+(defn solve-351-async []
+  (let [pred (fn [n m] (> 10000 (+ n m)))
+        odd (future (count (math/coprimes 1 2 pred)))
+        even (future (count (math/coprimes 1 3 pred)))]
+    (+ @odd @even)))
+     

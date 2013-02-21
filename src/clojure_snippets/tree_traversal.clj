@@ -1,20 +1,9 @@
-(ns clojure-snippets.tree-traversal)
-
-(defn queue [& items]
-  (let [q clojure.lang.PersistentQueue/EMPTY]
-    (if items 
-      (apply conj q items)
-      q)))
-
-(defn post-cons [x seq]
-  (lazy-seq
-    (if (not-empty seq)
-      (cons (first seq) (post-cons x (rest seq)))
-      [x])))
+(ns clojure-snippets.tree-traversal
+  (:require [clojure-snippets.util :as util]))
 
 (defn make-walk [strategy order branch? branch leaf children]
-  (let [node-store (if (= :depth strategy) vector queue)
-        node-cons (if (= :pre order) cons post-cons)]
+  (let [node-store (if (= :depth strategy) vector util/queue)
+        node-cons (if (= :pre order) cons util/post-cons)]
     (fn [& nodes]
       (let [nodes (apply node-store nodes)
             walk (fn walk [nodes]
