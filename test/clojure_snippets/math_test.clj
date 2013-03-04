@@ -14,6 +14,24 @@
     (is (= '(1 6 15 20 15 6 1) (pascal-row 6)))
     (is (= '(1 7 21 35 35 21 7 1) (pascal-row 7)))))
 
+(deftest range-sum-test
+  (is (= (reduce + (range 1 42)) (range-sum 42)))
+  (is (= (reduce + (range 42 4711)) (range-sum 42 4711)))
+  (is (= (- (reduce + (range 1 4))) (range-sum 4 1)))
+  (is (= (- (reduce + (range 3 10))) (range-sum 10 3)))
+  (is (zero? (range-sum 5 5))))
+
+(deftest range-sum-2-test
+  (is (= (reduce + (range 1 4711 2)) (range-sum-2 4711)))
+  (is (= (reduce + (range 2 42 2)) (range-sum-2 42)))
+  (is (= (reduce + (range 9 19 2)) (range-sum-2 9 19)))
+  (is (= (reduce + (range 10 20 2)) (range-sum-2 10 20)))
+  (is (= (- (reduce + (range 1 9 2))) (range-sum-2 9 1)))
+  (is (zero? (range-sum-2 5 5)))
+  (is (zero? (range-sum-2 8 8)))
+  (is (nil? (range-sum-2 5 10)))
+  (is (nil? (range-sum-2 4 9))))
+
 (deftest make-fib-test
   (is (= '(0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610)
          (take 16 ((make-fib 1 1) 0 1))))
@@ -46,4 +64,4 @@
         pred (fn [_ m] (> 10 m))]                   
     (is (= odd (set (coprimes 1 2 pred))))
     (is (= even (set (coprimes 1 3 pred))))
-    (is (= (clojure.set/union odd even) (set (coprimes pred))))))  
+    (is (= (clojure.set/union odd even) (set (coprimes pred))))))

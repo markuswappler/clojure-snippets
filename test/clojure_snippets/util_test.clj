@@ -7,6 +7,11 @@
   (is (= "dbg: (+ 3 4) -> 7\r\n" 
          (with-out-str (dbg (+ 3 4))))))
 
+(deftest int-exp-test
+  (is (= 4 (int-exp  4 0)))
+  (is (= 30 (int-exp 3 1)))
+  (is (= 52000 (int-exp 52 3))))
+
 (deftest interleave-all-test
   (is (= '(1 4 2 5 3 6)
          (interleave-all [1 2 3] [4 5 6])))

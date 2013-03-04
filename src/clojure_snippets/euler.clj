@@ -1,13 +1,7 @@
 (ns clojure-snippets.euler
   (:require [clojure.math.numeric-tower :as numeric]
-            [clojure-snippets.math :as math]))
-
-;; helper
-
-(defn int-exp 
-  "integer number via exponential notation"
-  [m e]  
-  (* m (numeric/expt 10 e)))
+            [clojure-snippets.math :as math]
+            [clojure-snippets.util :as util]))
 
 ;; 1
 
@@ -34,7 +28,7 @@
 ;; fk = 4 * fk-3 + fk-6 
 
 (defn solve-2 
-  ([] (solve-2 (int-exp 4 6)))
+  ([] (solve-2 (util/int-exp 4 6)))
   ([n]
     (->> 
       ((math/make-fib 1 4) 2 8)
@@ -43,18 +37,18 @@
 
 ;; 7
 ;; The nth prime is about n * log(n).
-;; Thus, take 2n * log(n) as upper bound
+;; Thus, take 2n * (log(n) + 1) as upper bound
 
 (defn solve-7
-  ([] (solve-7 (inc (int-exp 1 4))))
+  ([] (solve-7 (inc (util/int-exp 1 4))))
   ([n]
-    (nth (math/primes (numeric/round (* 2 n (Math/log n)))) 
+    (nth (math/primes (* 2 n (inc (numeric/ceil (Math/log n))))) 
          (dec n))))
 
 ;; 10
 
 (defn solve-10
-  ([] (solve-10 (int-exp 2 6)))
+  ([] (solve-10 (util/int-exp 2 6)))
   ([n] (reduce + (math/primes (dec n)))))
 
 ;; 15
@@ -67,11 +61,10 @@
 
 ;; 351
 
-(defn solve-351 
-  ([] (solve-351 (int-exp 1 8)))
+(defn solve-351-slow
+  ([] (solve-351-slow (util/int-exp 1 8)))
   ([n]
-    (let [covered (fn [p q] 
-                    (dec (quot n (+ p q))))
+    (let [covered (fn [p q] (dec (quot n (+ p q))))
           covered-all (fn [p q]
                         (->> (math/coprimes p q #(< 0 (covered %1 %2)))
                           (map (partial apply covered))
@@ -82,3 +75,25 @@
          (* 6 (covered 1 1))
          (* 12 @covered-12)
          (* 12 @covered-13)))))
+
+(defn- shadow [n k]
+  (dec (quot n k)))
+
+(defn- level-count [k]
+  (quot (dec k) 2))
+
+(defn- covers [n k]
+  (let [uncover (->> (range (* 2 k) k (inc (quot n 2)))
+                  (map (partial shadow n))
+                  (reduce +))]
+    (- (shadow n k) uncover)))
+
+(defn- covers-level [n k]
+  (* (level-count k) (covers n k)))
+
+(defn solve-351 
+  ([] (solve-351 (util/int-exp 1 8)))
+  ([n]
+    (+ (* 6 (shadow n 1))
+       (* 6 (shadow n 2))
+       (* 12 (reduce + (map (partial covers-level n) (range 3 (inc (quot n 2)))))))))

@@ -20,7 +20,7 @@
 (deftest test-solve-15
   (is (= 6 (solve-15 2))))
 
-(deftest test-solve-351
-  (is (= 30 (solve-351 5)))
-  (is (= 138 (solve-351 10)))
-  (is (= 1177848 (solve-351 1000))))
+(deftest test-solve-351-slow
+  (is (= 30 (solve-351-slow 5)))
+  (is (= 138 (solve-351-slow 10)))
+  (is (= 1177848 (solve-351-slow 1000))))

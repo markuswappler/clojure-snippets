@@ -1,9 +1,15 @@
-(ns clojure-snippets.util)
+(ns clojure-snippets.util
+  (:require [clojure.math.numeric-tower :as numeric]))
 
 (defmacro dbg [x]
   `(let [x# ~x]
      (println "dbg:" '~x "->" x#)
      x#))
+
+(defn int-exp 
+  "integer number via exponential notation"
+  [m e]  
+  (* m (numeric/expt 10 e)))
 
 (defn interleave-all [c1 c2]
   (lazy-seq
