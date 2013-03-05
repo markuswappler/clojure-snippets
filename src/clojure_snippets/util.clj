@@ -1,15 +1,11 @@
-(ns clojure-snippets.util
-  (:require [clojure.math.numeric-tower :as numeric]))
+(ns clojure-snippets.util)
 
+;; Idea from 
+;; http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-i-getting.html
 (defmacro dbg [x]
   `(let [x# ~x]
      (println "dbg:" '~x "->" x#)
      x#))
-
-(defn int-exp 
-  "integer number via exponential notation"
-  [m e]  
-  (* m (numeric/expt 10 e)))
 
 (defn interleave-all [c1 c2]
   (lazy-seq
@@ -32,3 +28,22 @@
     (if (not-empty seq)
       (cons (first seq) (post-cons x (rest seq)))
       [x])))
+
+(defn make-treewalk [strategy order branch? branch leaf children]
+  (let [node-store (if (= :depth strategy) vector queue)
+        node-cons (if (= :pre order) cons post-cons)]
+    (fn [& nodes]
+      (let [nodes (apply node-store nodes)
+            walk (fn walk [nodes]
+                   (lazy-seq
+                     (when-let [node (peek nodes)]
+                       (let [[item children]
+                             (if (branch? node)
+                               [(branch node) (children node)]
+                               [(leaf node) []])]
+                         (node-cons
+                           item
+                           (if (empty? children)
+                             (walk (pop nodes))
+                             (walk (apply conj (pop nodes) children))))))))]
+        (walk nodes)))))

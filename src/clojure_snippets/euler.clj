@@ -28,7 +28,7 @@
 ;; fk = 4 * fk-3 + fk-6 
 
 (defn solve-2 
-  ([] (solve-2 (util/int-exp 4 6)))
+  ([] (solve-2 (math/int-exp 4 6)))
   ([n]
     (->> 
       ((math/make-fib 1 4) 2 8)
@@ -40,7 +40,7 @@
 ;; Thus, take 2n * (log(n) + 1) as upper bound
 
 (defn solve-7
-  ([] (solve-7 (inc (util/int-exp 1 4))))
+  ([] (solve-7 (inc (math/int-exp 1 4))))
   ([n]
     (nth (math/primes (* 2 n (inc (numeric/ceil (Math/log n))))) 
          (dec n))))
@@ -48,7 +48,7 @@
 ;; 10
 
 (defn solve-10
-  ([] (solve-10 (util/int-exp 2 6)))
+  ([] (solve-10 (math/int-exp 2 6)))
   ([n] (reduce + (math/primes (dec n)))))
 
 ;; 15
@@ -61,8 +61,9 @@
 
 ;; 351
 
+;; http://en.wikipedia.org/wiki/Coprimes
 (defn solve-351-slow
-  ([] (solve-351-slow (util/int-exp 1 8)))
+  ([] (solve-351-slow (math/int-exp 1 8)))
   ([n]
     (let [covered (fn [p q] (dec (quot n (+ p q))))
           covered-all (fn [p q]
@@ -76,24 +77,12 @@
          (* 12 @covered-12)
          (* 12 @covered-13)))))
 
-(defn- shadow [n k]
-  (dec (quot n k)))
-
-(defn- level-count [k]
-  (quot (dec k) 2))
-
-(defn- covers [n k]
-  (let [uncover (->> (range (* 2 k) k (inc (quot n 2)))
-                  (map (partial shadow n))
-                  (reduce +))]
-    (- (shadow n k) uncover)))
-
-(defn- covers-level [n k]
-  (* (level-count k) (covers n k)))
-
+;; http://mathworld.wolfram.com/TotientSummatoryFunction.html
 (defn solve-351 
-  ([] (solve-351 (util/int-exp 1 8)))
+  ([] (solve-351 (math/int-exp 1 8)))
   ([n]
-    (+ (* 6 (shadow n 1))
-       (* 6 (shadow n 2))
-       (* 12 (reduce + (map (partial covers-level n) (range 3 (inc (quot n 2)))))))))
+    (let [total (inc (* 6 (math/range-sum n))) ;; arithmetic series (in "radius")
+          phi-sum-3-to-n (- (math/phi-summatory n) 2)
+          lighted (+ 13
+                     (* 6 phi-sum-3-to-n))]
+      (- total lighted))))

@@ -1,6 +1,17 @@
 (ns clojure-snippets.math
-  (:require [clojure-snippets.tree-traversal :as traversal]
+  (:require [clojure.math.numeric-tower :as numeric] 
             [clojure-snippets.util :as util]))
+
+(defn int-exp 
+  "integer number via exponential notation"
+  [m e]  
+  (* m (numeric/expt 10 e)))
+
+(defn sgn [x]
+  (cond 
+    (neg? x) -1
+    (pos? x) 1
+    :else 0))
 
 (defn binom
   "binomial coefficient"
@@ -12,35 +23,21 @@
         acc
         (recur n (dec k) (/ (* acc (+ n (- k) 1)) k))))))
 
-(defn range-sum 
-  "(range-sum n) 
-    = 1 + 2 + ... + (n - 1).
-  (range-sum n0 n1) 
-    = n0 + (n0 + 1) + ... + (n1 - 1) for n0 < n1,
-    = -(n1 + (n1 + 1) + ... + (n0 - 1)) for n0 > n1,
-    = 0 for n0 = n1."
-  ([n] (quot (* (dec n) n) 2))
-  ([n0 n1] (- (range-sum n1) (range-sum n0))))
-
-(defn range-sum-2
-  "(range-sum n) 
-    = 1 + 3 + 5 + ... + (n - 2) for n odd,
-    = 2 + 4 + 6 + ... + (n - 2) for n even.
-  (range-sum n0 n1) 
-    = n0 + (n0 + 2) + ... + (n1 - 2) for n0 < n1, n0 = n1 (mod 2),
-    = -(n1 + (n1 + 2) + ... + (n0 - 2)) for n0 > n1, n0 = n1 (mod 2),
-    = 0 for n0 = n1,
-    = nil for n1 - n0 = 1 (mod 2)."
-  ([n]
-    (if (even? n)
-      (let [half (quot n 2)]
-        (* (dec half) half))
-      (let [half (quot (dec n) 2)]
-        (* half half))))
-  ([n0 n1]
-    (when (even? (- n1 n0))
-      (- (range-sum-2 n1) (range-sum-2 n0)))))
-
+(defn range-sum
+  "Fast computation of (reduce + (range ...)).
+  Contrary to the range function both bounds are inclusive."
+  ([n] (quot (* n (inc n)) 2))
+  ([n0 n1] (range-sum n0 n1 1))
+  ([n0 n1 step]
+    (cond
+      (zero? step) 0
+      (neg? step) (range-sum n1 n0 (- step))
+      (> n0 n1) 0
+      :else (let [shift (- step n0)
+                  n (quot (+ n1 shift) step)]
+              (- (* step (range-sum n)) 
+                 (* n shift))))))
+  
 (defn make-fib 
   "Returns a function that takes two arguments [a0 a1] and
   returns a lazy (generalized) Fibonacci sequence with
@@ -56,16 +53,55 @@
   [n]
   (if (< 1 n)
     (let [n+1 (inc n)
+          sqrt+1 (inc (numeric/floor (numeric/sqrt n)))
           ps (boolean-array n+1 true)]
       (doseq [even (range 4 n+1 2)]
         (aset-boolean ps even false))
-      (doseq [k (range 3 n+1)]
+      (doseq [k (range 3 sqrt+1)]
         (if (aget ps k)
           (doseq [mult (range (* k k) n+1 (* 2 k))]
             (aset-boolean ps mult false))))
       (cons 2 (for [k (range 3 n+1 2)
                     :when (aget ps k)]
                 k)))))
+
+;; Idea from http://mathoverflow.net/questions/99473/calculating-mobius-function
+;; Last mutation (> 0 val) -> 1, (< 0 val) -> -1 is necessary because
+;; of the sqrt-bound of the primes. First condition is not fulfilled if
+;; k contains a prime greater than the sqrt-bound. But this can only happen
+;; once, thus just flip the sign.
+(defn möbius 
+  "Generates array of the values of the möbius function from 1 to n.
+  Ignore value at position 0."
+  [n]  
+  (if (< 0 n)
+    (let [n+1 (inc n)
+          ps (primes (numeric/floor (numeric/sqrt n)))
+          mus (int-array n+1 1)]
+      (doseq [sqr (map #(* % %) ps)
+              mult (range sqr n+1 sqr)]
+        (aset-int mus mult 0))
+      (doseq [p ps
+              mult (range p n+1 p)
+              :let [val (aget mus mult)]]
+        (aset-int mus mult (* val (- p))))
+      (doseq [k (range 2 n+1)
+              :let [val (aget mus k)]]
+        (aset-int mus k (cond
+                          (= k (numeric/abs val)) (sgn val)
+                          (neg? val) 1
+                          (pos? val) -1
+                          :else 0)))
+      mus)))
+
+;; http://mathworld.wolfram.com/TotientSummatoryFunction.html
+(defn phi-summatory [n]
+  "Sum of Euler's phi function phi(k) for k from 1 to n."
+  (let [mus (möbius n)]
+    (areduce mus d acc 0
+             (if (pos? d)
+               (+ acc (* (aget mus d) (range-sum (quot n d))))
+               acc))))
 
 (defn coprimes
   "Generates a lazy sequence of pairs of coprime integers.
@@ -86,7 +122,7 @@
                         [m (- (* 2 m) n)]
                         [m (+ (* 2 m) n)]]
                        (filter (fn [[n m]] (pred n m)))))
-          walk (traversal/make-walk :depth :pre
-                                    (constantly true) identity identity
-                                    children)]
+          walk (util/make-treewalk :depth :pre
+                                   (constantly true) identity identity
+                                   children)]
       (walk [p q]))))
