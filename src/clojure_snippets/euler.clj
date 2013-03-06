@@ -81,8 +81,6 @@
 (defn solve-351 
   ([] (solve-351 (math/int-exp 1 8)))
   ([n]
-    (let [total (inc (* 6 (math/range-sum n))) ;; arithmetic series (in "radius")
-          phi-sum-3-to-n (- (math/phi-summatory n) 2)
-          lighted (+ 13
-                     (* 6 phi-sum-3-to-n))]
-      (- total lighted))))
+    (let [total (* 6 (math/range-sum n)) ;; arithmetic series (in "radius")
+          not-hidden (+ 6 (* 6 (math/phi-summatory 2 n)))]
+      (- total not-hidden))))

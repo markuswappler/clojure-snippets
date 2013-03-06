@@ -95,13 +95,19 @@
       mus)))
 
 ;; http://mathworld.wolfram.com/TotientSummatoryFunction.html
-(defn phi-summatory [n]
-  "Sum of Euler's phi function phi(k) for k from 1 to n."
-  (let [mus (möbius n)]
-    (areduce mus d acc 0
-             (if (pos? d)
-               (+ acc (* (aget mus d) (range-sum (quot n d))))
-               acc))))
+(defn phi-summatory 
+  "Sum of Euler's phi function phi(k) 
+  for k from 1 to n or n0 to n1, resp."
+  ([n] (phi-summatory 1 n))
+  ([n0 n1]
+    (let [mus (rest (seq (möbius n1)))
+          ps (fn [n]
+               (let [facs (for [d (range 1 (inc n))]
+                            (range-sum (quot n d)))]
+                 (reduce + (map * mus facs))))]
+      (if (< 1 n0)
+        (- (ps n1) (ps (dec n0)))
+        (ps n1)))))
 
 (defn coprimes
   "Generates a lazy sequence of pairs of coprime integers.

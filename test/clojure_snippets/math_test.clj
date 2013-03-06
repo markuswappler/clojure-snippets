@@ -67,8 +67,11 @@
 
 (deftest phi-summatory-test
   (let [sums [1 2 4 6 10 12 18 22 28]]
-    (is (= sums (map phi-summatory (range 1 10))))))
-
+    (is (= sums (map phi-summatory (range 1 10))))
+    (is (= (- (phi-summatory 4711) (phi-summatory 41))
+           (phi-summatory 42 4711)))
+    (is (= (phi-summatory 100) (phi-summatory 1 100)))))
+        
 (deftest coprimes-test
   (let [odd #{[1 2] [1 4] [1 6] [1 8]
               [2 3] [2 5] [2 7] [2 9]
