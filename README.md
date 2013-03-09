@@ -5,6 +5,9 @@ It may be explorations, puzzle solving code,
 or samples of interesting concepts.
 
 ## euler.clj
+Solvers for problems from [Project Euler][euler].
+
+[euler]: http://projecteuler.net/ "projecteuler.net"
 
 ## expressions.clj
 
@@ -34,6 +37,8 @@ Check out [MathWorld][m4] for more mathematical details.
 
 ## math.clj
 
+Mathematical functions mainly to support euler.clj.
+
 ## queens.clj
 
 Functional solver of the [Eight queens puzzle][q].
@@ -41,6 +46,8 @@ Functional solver of the [Eight queens puzzle][q].
 [q]: http://en.wikipedia.org/wiki/Eight_queens_puzzle "Wikipedia"
 
 ## util.clj
+
+Utility functions.
 
 ## License
 
