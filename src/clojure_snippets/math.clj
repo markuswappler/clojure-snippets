@@ -70,7 +70,7 @@
 ;; of the sqrt-bound of the primes. First condition is not fulfilled if
 ;; k contains a prime greater than the sqrt-bound. But this can only happen
 ;; once, thus just flip the sign.
-(defn möbius 
+(defn moebius 
   "Generates array of the values of the möbius function from 1 to n.
   Ignore value at position 0."
   [n]  
@@ -100,7 +100,7 @@
   for k from 1 to n or n0 to n1, resp."
   ([n] (phi-summatory 1 n))
   ([n0 n1]
-    (let [mus (rest (seq (möbius n1)))
+    (let [mus (rest (seq (moebius n1)))
           ps (fn [n]
                (let [facs (for [d (range 1 (inc n))]
                             (range-sum (quot n d)))]

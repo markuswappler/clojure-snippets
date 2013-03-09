@@ -61,9 +61,9 @@
     (is (= ps (primes 101)))
     (is (= ps (primes 102)))))
 
-(deftest möbius-test
+(deftest moebius-test
   (let [mus [1 -1 -1 0 -1 1 -1 0 0 1 -1 0 -1 1 1 0 -1 0 -1 0 1 1 -1 0 0]]
-    (is (= mus (rest (into [] (möbius 25)))))))
+    (is (= mus (rest (into [] (moebius 25)))))))
 
 (deftest phi-summatory-test
   (let [sums [1 2 4 6 10 12 18 22 28]]
