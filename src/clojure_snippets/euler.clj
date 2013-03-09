@@ -3,7 +3,7 @@
             [clojure-snippets.math :as math]
             [clojure-snippets.util :as util]))
 
-;; 1
+;; PROBLEM 1
 
 (defn solve-1 
   ([] (solve-1 1000))
@@ -23,7 +23,7 @@
          (sum-div-by 5)
          (- (sum-div-by 15))))))
 
-;; 2
+;; PROBLEM 2
 ;; Every third Fibonacci number is even: 2, 8, 34, 144, ...
 ;; fk = 4 * fk-3 + fk-6 
 
@@ -35,7 +35,7 @@
       (take-while (fn [a] (>= n a)))
       (reduce +))))
 
-;; 3
+;; PROBLEM 3
 
 (defn solve-3
   ([] (solve-3 (solve-3 600851475143 1000)))
@@ -52,7 +52,47 @@
               (recur d (rest ps))))
           n)))))
 
-;; 7
+;; PROBLEM 4
+
+(defn solve-4
+  ([] (solve-4 3))
+  ([n]
+    (let [lower (math/int-exp 1 (dec n))
+          upper (math/int-exp 1 n)  
+          palindrome? (fn [k]
+                        (let [frwd (str k)
+                              bkwd (apply str (reverse frwd))]
+                          (= frwd bkwd)))]
+      (apply max (for [k0 (range lower upper)
+                       k1 (range lower (inc k0))
+                       :let [prod (* k0 k1)]
+                       :when (palindrome? prod)]
+                   prod)))))
+
+;; PROBLEM 5
+;; compute for each prime at most 20 the maximum power at most 20
+;; this number enforces the maximal occurence of that prime
+
+(defn solve-5 
+  ([] (solve-5 20))
+  ([n]
+    (let [pow (fn [k] (->> (iterate (partial * k) k)
+                        (take-while (partial >= n))
+                        (last)))]
+      (->> (math/primes n)
+        (map pow)
+        (reduce *)))))
+
+;; PROBLEM 6
+
+(defn solve-6 
+  ([] (solve-6 100))
+  ([n]
+    (let [nums (math/range-sum n)
+          sqrs (quot (* nums (inc (* 2 n))) 3)]
+      (- (* nums nums) sqrs))))
+
+;; PROBLEM 7
 ;; The nth prime is about n * log(n).
 ;; Thus, take 2n * (log(n) + 1) as upper bound
 
@@ -62,13 +102,55 @@
     (nth (math/primes (* 2 n (inc (numeric/ceil (Math/log n))))) 
          (dec n))))
 
-;; 10
+;; PROBLEM 8
+
+(defn solve-8 
+  ([] (solve-8 (str "73167176531330624919225119674426574742355349194934"
+                    "96983520312774506326239578318016984801869478851843"
+                    "85861560789112949495459501737958331952853208805511"
+                    "12540698747158523863050715693290963295227443043557"
+                    "66896648950445244523161731856403098711121722383113"
+                    "62229893423380308135336276614282806444486645238749"
+                    "30358907296290491560440772390713810515859307960866"
+                    "70172427121883998797908792274921901699720888093776"
+                    "65727333001053367881220235421809751254540594752243"
+                    "52584907711670556013604839586446706324415722155397"
+                    "53697817977846174064955149290862569321978468622482"
+                    "83972241375657056057490261407972968652414535100474"
+                    "82166370484403199890008895243450658541227588666881"
+                    "16427171479924442928230863465674813919123162824586"
+                    "17866458359124566529476545682848912883142607690042"
+                    "24219022671055626321111109370544217506941658960408"
+                    "07198403850962455444362981230987879927244284909188"
+                    "84580156166097919133875499200524063689912560717606"
+                    "05886116467109405077541002256983155200055935729725"
+                    "71636269561882670428252483600823257530420752963450")))
+  ([stream]
+    (let [digits (fn [shift]
+                   (->> stream
+                     (map (comp read-string str))
+                     (drop shift)))]
+      (apply max (map * (digits 0) (digits 1) (digits 2) (digits 3) (digits 4))))))
+
+;; PROBLEM 9
+
+(defn solve-9
+  ([] (solve-9 1000))
+  ([n]
+    (first (for [a (range 1 n)
+                 b (range (inc a) n)
+                 :let [c (- n a b)]
+                 :when (< b c)
+                 :when (= (* c c) (+ (* a a) (* b b)))]
+             (* a b c)))))
+
+;; PROBLEM 10
 
 (defn solve-10
   ([] (solve-10 (math/int-exp 2 6)))
   ([n] (reduce + (math/primes (dec n)))))
 
-;; 15
+;; PROBLEM 15
 ;; make 2n decisions: right or down
 ;; choose n down-decisions from all decisions
 
@@ -76,7 +158,7 @@
   ([] (solve-15 20))
   ([n] (math/binom (* 2 n) n)))
 
-;; 351
+;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape
 ;; consider e.g. the "spoke" to the right corner (inclusive) and the sector above
 ;; up to the "spoke" to the right up corner (exclusive)

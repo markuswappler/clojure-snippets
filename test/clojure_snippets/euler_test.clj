@@ -14,8 +14,23 @@
 (deftest test-solve-3
   (is (= 29 (solve-3 13195))))
 
+(deftest test-solve 4
+  (is (= 9009 (solve-4 2))))
+
+(deftest test-solve-5
+  (is (= 2520 (solve-5 10))))
+
+(deftest test-solve-6
+  (is (= 2640 (solve-6 10))))
+
 (deftest test-solve-7
   (is (= '(2 3 5 7 11 13) (map solve-7 (range 1 7)))))
+
+(deftest test-solve-8
+  (is (= 64 (solve-8 "122224"))))
+
+(deftest test-solve-9
+  (is (= (* 3 4 5) (solve-9 (+ 3 4 5)))))
 
 (deftest test-solve-10
   (is (= (+ 2 3 5 7) (solve-10 10))))
