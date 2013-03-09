@@ -47,7 +47,7 @@
     (lazy-seq 
       (cons a0 (fib a1 (+ (* c0 a0) (* c1 a1)))))))
 
-;; uses java-array for the sake of efficiency
+;; Uses java-array for the sake of efficiency.
 (defn primes 
   "Lists all prime numbers up to n via the sieve of Eratosthenes."
   [n]
@@ -65,11 +65,16 @@
                     :when (aget ps k)]
                 k)))))
 
-;; Idea from http://mathoverflow.net/questions/99473/calculating-mobius-function
-;; Last mutation (> 0 val) -> 1, (< 0 val) -> -1 is necessary because
-;; of the sqrt-bound of the primes. First condition is not fulfilled if
-;; k contains a prime greater than the sqrt-bound. But this can only happen
-;; once, thus just flip the sign.
+;; Idea is from http://mathoverflow.net/questions/99473/calculating-mobius-function
+;; Sieve like strategy:
+;; For each prime remove all multiples of its square.
+;; For each (non-square) multiple multiply by the prime and swap the sign to
+;; store whether there are even or odd factors so far.
+;; If after the sieving the number is the product of factors (up to the maybe negative sign),
+;; the decomposition is complete and the sign is the value of the möbius function.
+;; Otherwise there is exactly one factor missing (which was neglected due to
+;; the bound of the primes to sqrt(n).
+;; So flip the sign once more to get the value of the möbius function.
 (defn moebius 
   "Generates array of the values of the möbius function from 1 to n.
   Ignore value at position 0."
@@ -109,6 +114,7 @@
         (- (ps n1) (ps (dec n0)))
         (ps n1)))))
 
+;; http://en.wikipedia.org/wiki/Coprimes
 (defn coprimes
   "Generates a lazy sequence of pairs of coprime integers.
   Starting with (p, q) from each pair (n, m) with n < m three 
