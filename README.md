@@ -4,13 +4,18 @@ This is repo contains small pieces of Clojure code.
 It may be explorations, puzzle solving code, 
 or samples of interesting concepts.
 
-## Queens
+## euler.clj
 
-Functional solver of the [Eight queens puzzle][q].
+## expressions.clj
 
-[q]: http://en.wikipedia.org/wiki/Eight_queens_puzzle "Wikipedia"
+Interpreting arithmetic expressions via [Parser combinators][e1].
+Uses [The Parsatron][e2] as library. This is currently in progress,
+targeting a simple scripting language. Not for use, but for fun.
 
-## Mastermind
+[e1]: http://en.wikipedia.org/wiki/Parser_combinator "Wikipedia"
+[e2]: https://github.com/youngnh/parsatron "GitHub"
+
+## mastermind.clj
 
 Implementation of the [Mastermind game][m1]. 
 Provides two solving functions based on the 
@@ -27,14 +32,15 @@ Check out [MathWorld][m4] for more mathematical details.
 [m5]: http://en.wikipedia.org/wiki/Donald_Knuth "Wikipedia"
 [m6]: http://math2.eku.edu/greenwell/ "Homepage"
 
-## Expressions
+## math.clj
 
-Interpreting arithmetic expressions via [Parser combinators][e1].
-Uses [The Parsatron][e2] as library. This is currently in progress,
-targeting a simple scripting language. Not for use, but for fun.
+## queens.clj
 
-[e1]: http://en.wikipedia.org/wiki/Parser_combinator "Wikipedia"
-[e2]: https://github.com/youngnh/parsatron "GitHub"
+Functional solver of the [Eight queens puzzle][q].
+
+[q]: http://en.wikipedia.org/wiki/Eight_queens_puzzle "Wikipedia"
+
+## util.clj
 
 ## License
 
