@@ -35,6 +35,23 @@
       (take-while (fn [a] (>= n a)))
       (reduce +))))
 
+;; 3
+
+(defn solve-3
+  ([] (solve-3 (solve-3 600851475143 1000)))
+  ([n] (solve-3 n n))
+  ([n max-p]
+    (let [div (fn [n p] (if (zero? (rem n p))
+                          (recur (quot n p) p)
+                          n))]
+      (loop [n n ps (math/primes max-p)]
+        (if-let [p (first ps)]
+          (let [d (div n p)]
+            (if (= 1 d)
+              n
+              (recur d (rest ps))))
+          n)))))
+
 ;; 7
 ;; The nth prime is about n * log(n).
 ;; Thus, take 2n * (log(n) + 1) as upper bound
