@@ -97,6 +97,7 @@
 ;; number of not hidden points 6 times the number of points with 
 ;; coordinates (m,k), 0<=m<k, 0<k<=n and m,k coprime
 ;; but this is the sum of Euler's totient function from 1 to n
+;; conveniently fast solution, about 2 minutes on dual core, 2.2 GHz
 (defn solve-351 
   ([] (solve-351 (math/int-exp 1 8)))
   ([n]
