@@ -2,11 +2,6 @@
   (:require [clojure.math.numeric-tower :as numeric] 
             [clojure-snippets.util :as util]))
 
-(defn int-exp 
-  "integer number via exponential notation"
-  [m e]  
-  (* m (numeric/expt 10 e)))
-
 (defn sgn [x]
   (cond 
     (neg? x) -1

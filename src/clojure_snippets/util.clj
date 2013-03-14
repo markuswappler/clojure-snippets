@@ -47,3 +47,33 @@
                              (walk (pop nodes))
                              (walk (apply conj (pop nodes) children))))))))]
         (walk nodes)))))
+
+(defn make-dijkstra [neighbors dist]
+  (fn dijkstra [sources terminal?]
+    (if (coll? terminal?)
+      (dijkstra sources (fn [node] (some #{node} terminal?)))
+      (loop [visited {}
+             reachable (->> sources
+                         (map (fn [s] {s {:dist 0 :prev nil}}))
+                         (apply merge {}))]
+        (when-let [[node node-data]
+                   (first (sort-by (comp :dist val) reachable))]
+          (if (terminal? node)
+            (loop [path [{:node node :dist (node-data :dist)}] 
+                   prev (node-data :prev)]
+              (if-let [prev-data (visited prev)]
+                (recur (conj path {:node prev :dist (prev-data :dist)})
+                       (prev-data :prev))
+                path))
+            (let [updates (->> (neighbors node)
+                            (filter (fn [nb] (not (visited nb))))
+                            (map (fn [nb] [nb (+ (node-data :dist) (dist node nb))]))
+                            (filter (fn [[nb d]]
+                                      (if-let [r (reachable nb)]
+                                        (> (r :dist) d)
+                                        true)))
+                            (map (fn [[nb d]] 
+                                   {nb {:dist d 
+                                        :prev node}})))]
+              (recur (assoc visited node node-data)
+                     (apply merge (dissoc reachable node) updates)))))))))

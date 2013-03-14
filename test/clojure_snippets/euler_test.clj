@@ -14,7 +14,7 @@
 (deftest test-solve-3
   (is (= 29 (solve-3 13195))))
 
-(deftest test-solve 4
+(deftest test-solve-4
   (is (= 9009 (solve-4 2))))
 
 (deftest test-solve-5

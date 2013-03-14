@@ -28,7 +28,7 @@
 ;; fk = 4 * fk-3 + fk-6 
 
 (defn solve-2 
-  ([] (solve-2 (math/int-exp 4 6)))
+  ([] (solve-2 (int 4e6)))
   ([n]
     (->> 
       ((math/make-fib 1 4) 2 8)
@@ -57,8 +57,8 @@
 (defn solve-4
   ([] (solve-4 3))
   ([n]
-    (let [lower (math/int-exp 1 (dec n))
-          upper (math/int-exp 1 n)  
+    (let [lower (numeric/expt 10 (dec n))
+          upper (numeric/expt 10 n)  
           palindrome? (fn [k]
                         (let [fwd (str k)
                               bwd (apply str (reverse fwd))]
@@ -97,7 +97,7 @@
 ;; Thus, take 2n * (log(n) + 1) as upper bound
 
 (defn solve-7
-  ([] (solve-7 (inc (math/int-exp 1 4))))
+  ([] (solve-7 (inc (int 1e4))))
   ([n]
     (nth (math/primes (* 2 n (inc (numeric/ceil (Math/log n))))) 
          (dec n))))
@@ -130,7 +130,7 @@
 ;; PROBLEM 10
 
 (defn solve-10
-  ([] (solve-10 (math/int-exp 2 6)))
+  ([] (solve-10 (int 2e6)))
   ([n] (reduce + (math/primes (dec n)))))
 
 ;; PROBLEM 15
@@ -161,7 +161,7 @@
 ;; even though this approach may be speeded up by using more symmetry in the sector
 ;; ((m,k) has as many hidden points as (k-m,k))
 (defn solve-351-slow
-  ([] (solve-351-slow (math/int-exp 1 8)))
+  ([] (solve-351-slow (int 1e8)))
   ([n]
     (let [hidden (fn [k] (dec (quot n k)))
           hidden-mk (fn [m k]
@@ -181,7 +181,7 @@
 ;; but this is the sum of Euler's totient function from 1 to n
 ;; conveniently fast solution, about 2 minutes on dual core, 2.2 GHz
 (defn solve-351 
-  ([] (solve-351 (math/int-exp 1 8)))
+  ([] (solve-351 (int 1e8)))
   ([n]
     (let [total (* 6 (math/range-sum n))
           not-hidden (* 6 (math/phi-summatory n))]

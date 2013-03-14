@@ -3,11 +3,6 @@
   (:use clojure.test
         clojure-snippets.math))
 
-(deftest int-exp-test
-  (is (= 4 (int-exp  4 0)))
-  (is (= 30 (int-exp 3 1)))
-  (is (= 52000 (int-exp 52 3))))
-
 (deftest sgn-test
   (is (= 0 (sgn 0)))
   (is (= 0 (sgn 0.0)))

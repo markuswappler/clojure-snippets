@@ -70,3 +70,67 @@
                     (take 12 (walk [0 1]))))
              (is (= '(2 6 8 14 22 36 58 94)
                     (take 8 (walk [2 6])))))))
+
+(deftest test-make-dijkstra
+  (testing "unique distances"
+           (let [dijkstra (make-dijkstra (fn [k] [(dec k) (inc k) (* 2 k)])
+                                         (constantly 1))]
+             (is (= [{:node 16 :dist 4}
+                     {:node 8 :dist 3}
+                     {:node 4 :dist 2}
+                     {:node 2 :dist 1}
+                     {:node 1 :dist 0}]
+                    (dijkstra [1] [16])))
+             (is (= [{:node 16 :dist 4}
+                     {:node 8 :dist 3}
+                     {:node 4 :dist 2}
+                     {:node 2 :dist 1}
+                     {:node 1 :dist 0}]
+                    (dijkstra [1] #(= 16 %))))
+             (is (= [{:node 16 :dist 2}
+                     {:node 8 :dist 1}
+                     {:node 9 :dist 0}]
+                    (dijkstra [1 9] [16])))
+             (is (= [{:node 16 :dist 2}
+                     {:node 8 :dist 1}
+                     {:node 9 :dist 0}]
+                    (dijkstra [1 9] #(= 16 %))))
+             (is (= [{:node 18 :dist 1}
+                     {:node 9 :dist 0}]
+                    (dijkstra [1 9] [16 18])))
+             (is (= [{:node 18 :dist 1}
+                     {:node 9 :dist 0}]
+                    (dijkstra [1 9] #(or (= 16 %) (= 18 %)))))
+             (is (= [{:node 1 :dist 0}]
+                    (dijkstra [1 9] [1 16 18])))
+             (is (= [{:node 1 :dist 0}]
+                    (dijkstra [1 9] #(or (= 1 %) (= 16 %) (= 18 %)))))))
+  (testing "variable distances"
+           (let [dijkstra (make-dijkstra (fn [k] [(inc k) (+ 3 k)])
+                                         (fn [k m]
+                                           (let [diff (- m k)]
+                                             (if (odd? k)
+                                               diff
+                                               (* 2 diff)))))]
+             (is (= [{:node 4 :dist 5}
+                     {:node 1 :dist 2}
+                     {:node 0 :dist 0}] 
+                    (dijkstra [0] [4])))
+             (is (= [{:node 8 :dist 10}
+                     {:node 5 :dist 7}
+                     {:node 4 :dist 5}
+                     {:node 1 :dist 2}
+                     {:node 0 :dist 0}] 
+                    (dijkstra [0] [8])))))
+  (testing "not connected"
+           (let [dijkstra (make-dijkstra (fn [k]
+                                           (if (> 16 k)
+                                             [(* 2 k)]))
+                                         (constantly 1))]
+             (is (= [{:node 16 :dist 4}
+                     {:node 8 :dist 3}
+                     {:node 4 :dist 2}
+                     {:node 2 :dist 1}
+                     {:node 1 :dist 0}]
+                    (dijkstra [1] [16])))
+             (is (nil? (dijkstra [1] [32]))))))
