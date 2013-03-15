@@ -35,6 +35,12 @@
 (deftest test-solve-10
   (is (= (+ 2 3 5 7) (solve-10 10))))
 
+(deftest test-solve-11
+  (is (= 16 (solve-11 [[2 0 0 1]
+                       [1 2 1 1]
+                       [0 1 2 1]
+                       [0 0 1 2]]))))
+
 (deftest test-solve-15
   (is (= 6 (solve-15 2))))
 

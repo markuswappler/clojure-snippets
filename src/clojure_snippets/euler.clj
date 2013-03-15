@@ -124,12 +124,12 @@
 (defn solve-8 
   ([] (solve-8 (slurp-digits "resources/euler-8.txt")))
   ([digits]
-    (apply max (map * 
-                    digits 
-                    (drop 1 digits) 
-                    (drop 2 digits) 
-                    (drop 3 digits) 
-                    (drop 4 digits)))))
+    (reduce max (map * 
+                     digits 
+                     (drop 1 digits) 
+                     (drop 2 digits) 
+                     (drop 3 digits) 
+                     (drop 4 digits)))))
 
 ;; PROBLEM 9
 
@@ -149,6 +149,30 @@
   ([] (solve-10 (int 2e6)))
   ([n] (reduce + (math/primes (dec n)))))
 
+;; PROBLEM 11
+
+(defn solve-11 
+  ([] (solve-11 (slurp-matrix "resources/euler-11.txt" #"\s")))
+  ([rows]
+    (let [cnt (count rows)
+          number (fn [[i j]]
+                   (if (and (<= 0 i) (> cnt i) (<= 0 j) (> cnt j))
+                     ((rows i) j)
+                     0))
+          row (fn [[i j]] (for [k (range 4)] [i (+ j k)]))
+          col (fn [[i j]] (for [k (range 4)] [(+ i k) j]))
+          diag1 (fn [[i j]] (for [k (range 4)] [(+ i k) (+ j k)]))
+          diag2 (fn [[i j]] (for [k (range 4)] [(- i k) (+ j k)]))
+          prod (fn [ijs] (apply * (map number ijs)))]
+      (->> (for [i (range cnt)
+                 j (range cnt)]
+             [(prod (row [i j]))
+              (prod (col [i j]))
+              (prod (diag1 [i j]))
+              (prod (diag2 [i j]))])
+        (reduce concat)
+        (reduce max)))))
+
 ;; PROBLEM 15
 ;; make 2n decisions: right or down
 ;; choose n down-decisions from all decisions
@@ -165,7 +189,7 @@
     (let [cnt (count rows)
           number (fn [[i j]] ((rows i) j))
           neighbors (fn [[i j]] [[(inc i) j] [(inc i) (inc j)]])
-          dist (fn [_ pos] (- 100 (number pos)))
+          dist (fn [_ ij] (- 100 (number ij)))
           dijkstra (util/make-dijkstra neighbors dist)
           source [0 0]
           terminals (for [col (range cnt)] [(dec cnt) col])
