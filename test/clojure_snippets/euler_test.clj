@@ -39,11 +39,7 @@
   (is (= 6 (solve-15 2))))
 
 (deftest test-solve-18
-  (is (= 3 (solve-18 [[1] [1 0] [1 0 0]])))
-  (is (= 4 (solve-18 [[1] [1 1] [1 1 2]])))
-  (is (= 5 (solve-18 [[1] [1 2] [1 2 1]])))
-  (is (= 6 (solve-18 [[1] [1 2] [4 1 2]]))))
-  
+  (is (= 23 (solve-18 [[3] [7 4] [2 4 6] [8 5 9 3]]))))  
 
 (deftest test-solve-351-slow
   (is (= 30 (solve-351-slow 5)))
