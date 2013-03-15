@@ -3,6 +3,23 @@
             [clojure-snippets.math :as math]
             [clojure-snippets.util :as util]))
 
+(defn- slurp-digits [file]
+  (->> (slurp file)
+    (clojure.string/split-lines)
+    (clojure.string/join)
+    (map (comp read-string str))))
+
+(defn- slurp-matrix [file sep]
+  (let [parse-line (fn [line]
+                     (->> (clojure.string/split line sep) 
+                       (map #(if (= \0 (first %)) (subs % 1) %))
+                       (map read-string)
+                       vec))]
+    (->> (slurp file)
+      (clojure.string/split-lines)
+      (map parse-line)
+      vec)))
+
 ;; PROBLEM 1
 
 (defn solve-1 
@@ -105,15 +122,14 @@
 ;; PROBLEM 8
 
 (defn solve-8 
-  ([] (solve-8 (->> (slurp "resources/euler-8.txt")
-                 (clojure.string/split-lines)
-                 (clojure.string/join))))
-  ([stream]
-    (let [digits (fn [shift]
-                   (->> stream
-                     (map (comp read-string str))
-                     (drop shift)))]
-      (apply max (map * (digits 0) (digits 1) (digits 2) (digits 3) (digits 4))))))
+  ([] (solve-8 (slurp-digits "resources/euler-8.txt")))
+  ([digits]
+    (apply max (map * 
+                    digits 
+                    (drop 1 digits) 
+                    (drop 2 digits) 
+                    (drop 3 digits) 
+                    (drop 4 digits)))))
 
 ;; PROBLEM 9
 
@@ -144,17 +160,7 @@
 ;; PROBLEM 18
 
 (defn solve-18 
-  ([]
-    (let [parse-line (fn [line]
-                       (->> (clojure.string/split line #"\s") 
-                         (map #(if (= \0 (first %)) (subs % 1) %))
-                         (map read-string)
-                         vec))
-          rows (->> (slurp "resources/euler-18.txt")
-                 (clojure.string/split-lines)
-                 (map parse-line)
-                 vec)]
-      (solve-18 rows)))
+  ([] (solve-18 (slurp-matrix "resources/euler-18.txt" #"\s")))
   ([rows]
     (let [cnt (count rows)
           number (fn [[i j]] ((rows i) j))
@@ -168,17 +174,7 @@
 
 ;; PROBLEM 67
 
-(defn solve-67 []
-  (let [parse-line (fn [line]
-                     (->> (clojure.string/split line #"\s") 
-                       (map #(if (= \0 (first %)) (subs % 1) %))
-                       (map read-string)
-                       vec))
-        rows (->> (slurp "resources/euler-67.txt")
-               (clojure.string/split-lines)
-               (map parse-line)
-               vec)]
-    (solve-18 rows)))         
+(defn solve-67 [] (solve-18 (slurp-matrix "resources/euler-67.txt" #"\s")))
 
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape

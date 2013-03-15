@@ -27,7 +27,7 @@
   (is (= '(2 3 5 7 11 13) (map solve-7 (range 1 7)))))
 
 (deftest test-solve-8
-  (is (= 64 (solve-8 "122224"))))
+  (is (= 64 (solve-8 [1 2 2 2 2 4]))))
 
 (deftest test-solve-9
   (is (= (* 3 4 5) (solve-9 (+ 3 4 5)))))
