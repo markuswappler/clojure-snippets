@@ -141,6 +141,45 @@
   ([] (solve-15 20))
   ([n] (math/binom (* 2 n) n)))
 
+;; PROBLEM 18
+
+(defn solve-18 
+  ([]
+    (let [parse-line (fn [line]
+                       (->> (clojure.string/split line #"\s") 
+                         (map #(if (= \0 (first %)) (subs % 1) %))
+                         (map read-string)
+                         vec))
+          rows (->> (slurp "resources/euler-18.txt")
+                 (clojure.string/split-lines)
+                 (map parse-line)
+                 vec)]
+      (solve-18 rows)))
+  ([rows]
+    (let [cnt (count rows)
+          number (fn [[i j]] ((rows i) j))
+          neighbors (fn [[i j]] [[(inc i) j] [(inc i) (inc j)]])
+          dist (fn [_ pos] (- 100 (number pos)))
+          dijkstra (util/make-dijkstra neighbors dist)
+          source [0 0]
+          terminals (for [col (range cnt)] [(dec cnt) col])
+          path (dijkstra [source] terminals)]      
+      (+ (number [0 0]) (- (* 100 (dec cnt)) ((first path) :dist))))))
+
+;; PROBLEM 67
+
+(defn solve-67 []
+  (let [parse-line (fn [line]
+                     (->> (clojure.string/split line #"\s") 
+                       (map #(if (= \0 (first %)) (subs % 1) %))
+                       (map read-string)
+                       vec))
+        rows (->> (slurp "resources/euler-67.txt")
+               (clojure.string/split-lines)
+               (map parse-line)
+               vec)]
+    (solve-18 rows)))         
+
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape
 ;; consider e.g. the "spoke" to the right corner (inclusive) and the sector above
