@@ -163,7 +163,7 @@
           col (fn [[i j]] (for [k (range 4)] [(+ i k) j]))
           diag1 (fn [[i j]] (for [k (range 4)] [(+ i k) (+ j k)]))
           diag2 (fn [[i j]] (for [k (range 4)] [(- i k) (+ j k)]))
-          prod (fn [ijs] (apply * (map number ijs)))]
+          prod (fn [ijs] (reduce * (map number ijs)))]
       (->> (for [i (range cnt)
                  j (range cnt)]
              [(prod (row [i j]))
@@ -199,6 +199,22 @@
 ;; PROBLEM 67
 
 (defn solve-67 [] (solve-18 (slurp-matrix "resources/euler-67.txt" #"\s")))
+
+(defn solve-81 
+  ([] (solve-81 (slurp-matrix "resources/euler-81.txt" #",")))
+  ([rows]
+    (let [cnt (count rows)
+          number (fn [[i j]] ((rows i) j))
+          neighbors (fn [[i j]]
+                      (concat [] 
+                              (if (> cnt (inc i)) [[(inc i) j]])
+                              (if (> cnt (inc j)) [[i (inc j)]])))
+          dist (fn [_ ij] (number ij))
+          dijkstra (util/make-dijkstra neighbors dist)
+          source [0 0]
+          terminal [(dec cnt) (dec cnt)]
+          path (dijkstra [source] [terminal])]
+      (+ (number [0 0]) ((first path) :dist)))))    
 
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape
