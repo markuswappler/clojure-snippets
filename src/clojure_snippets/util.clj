@@ -1,11 +1,18 @@
 (ns clojure-snippets.util)
 
-;; Idea from 
-;; http://www.learningclojure.com/2010/09/clojure-macro-tutorial-part-i-getting.html
-(defmacro dbg [x]
-  `(let [x# ~x]
-     (println "dbg:" '~x "->" x#)
-     x#))
+(defmacro condj 
+  ([coll test item]
+    `(if ~test
+       (conj ~coll ~item)
+       ~coll))
+  ([coll test item & clauses]
+    `(condj (condj ~coll ~test ~item) 
+            ~(first clauses) 
+            ~(second clauses) 
+            ~@(nnext clauses))))
+
+(defmacro cond-vector [& clauses]
+  `(condj [] ~@clauses)) 
 
 (defn interleave-all [c1 c2]
   (lazy-seq

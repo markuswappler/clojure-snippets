@@ -206,9 +206,8 @@
     (let [cnt (count rows)
           number (fn [[i j]] ((rows i) j))
           neighbors (fn [[i j]]
-                      (concat [] 
-                              (if (> cnt (inc i)) [[(inc i) j]])
-                              (if (> cnt (inc j)) [[i (inc j)]])))
+                      (util/cond-vector (> cnt (inc i)) [(inc i) j]
+                                        (> cnt (inc j)) [i (inc j)]))
           dist (fn [_ ij] (number ij))
           dijkstra (util/make-dijkstra neighbors dist)
           source [0 0]

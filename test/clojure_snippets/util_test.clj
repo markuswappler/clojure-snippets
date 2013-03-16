@@ -2,12 +2,19 @@
   (:use clojure.test
         clojure-snippets.util))
 
-(deftest dbg-test
-  (is (= 7 (dbg (+ 3 4))))
-  (is (= "dbg: (+ 3 4) -> 7\r\n" 
-         (with-out-str (dbg (+ 3 4))))))
+(deftest test-condj
+  (is (= [1 2 3] (condj [1 2] (< 1 2) 3)))
+  (is (= [1 2] (condj [1 2] (> 1 2) 3)))
+  (is (= [1 2 5] (condj [] true 1 true 2 false 3 false 4 true 5)))
+  (is (= [2 5 6] (condj [2] false 3 false 4 true 5 true 6))))
 
-(deftest interleave-all-test
+(deftest test-cond-vector
+  (is (= [] (cond-vector (> 1 2) 1)))
+  (is (= [1] (cond-vector (< 1 2) 1)))
+  (is (= [1 2 5] (cond-vector true 1 true 2 false 3 false 4 true 5)))
+  (is (= [3 4] (cond-vector false 1 false 2 true 3 true 4 false 5))))
+
+(deftest test-interleave-all
   (is (= '(1 4 2 5 3 6)
          (interleave-all [1 2 3] [4 5 6])))
   (is (= '(1 4 2 5 6)
