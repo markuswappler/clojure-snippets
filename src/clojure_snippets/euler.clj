@@ -200,6 +200,8 @@
 
 (defn solve-67 [] (solve-18 (slurp-matrix "resources/euler-67.txt" #"\s")))
 
+;; PROBLEM 81
+
 (defn solve-81 
   ([] (solve-81 (slurp-matrix "resources/euler-81.txt" #",")))
   ([rows]
@@ -213,7 +215,24 @@
           source [0 0]
           terminal [(dec cnt) (dec cnt)]
           path (dijkstra [source] [terminal])]
-      (+ (number [0 0]) ((first path) :dist)))))    
+      (+ (number [0 0]) ((first path) :dist)))))
+
+;; PROBLEM 82
+
+(defn solve-82
+  ([rows]
+    (let [cnt (count rows)
+          number (fn [[i j]] ((rows i) j))
+          neighbors (fn [[i j]]
+                      (util/cond-vector (and (<= 0 (dec i)) (<= 0 j)) [(dec i) j]
+                                        (and (> cnt (inc i)) (<= 0 j)) [(inc i) j]
+                                        (> cnt (inc j)) [i (inc j)]))
+          dist (fn [_ ij] (number ij))
+          dijkstra (util/make-dijkstra neighbors dist)
+          sources (for [i (range cnt)] [i -1])
+          terminals (for [i (range cnt)] [i (dec cnt)])
+          path (dijkstra sources terminals)]
+      ((first path) :dist))))
 
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape
