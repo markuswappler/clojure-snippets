@@ -51,6 +51,9 @@
                                          [2 4 6] 
                                          [8 5 9 3]])))))
 
+(deftest test-solve-20
+  (is (= 27 (solve-20 10))))
+
 (deftest test-solve-81
   (is (= 2427 (solve-81 (util/make-matrix [[131	673	234	103	18]
                                            [201	96	342	965	150]

@@ -16,7 +16,7 @@
                        (map read-string)
                        vec))]
     (->> (slurp file)
-      (clojure.string/split-lines)
+      clojure.string/split-lines
       (map parse-line)
       util/make-matrix)))
 
@@ -197,6 +197,18 @@
       (+ (apply (partial matrix :entry) source) 
          (- (* 100 (dec (matrix :rows))) 
             ((first path) :dist))))))
+
+;; PROBLEM 20
+
+(defn solve-20
+  ([] (solve-20 100))
+  ([n]
+    (->> (inc n)
+      (range 1)
+      (reduce *')
+      (str)
+      (map (comp read-string str))
+      (reduce +))))
 
 ;; PROBLEM 67
 

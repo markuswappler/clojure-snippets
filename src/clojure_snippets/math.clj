@@ -31,7 +31,7 @@
       :else (let [shift (- step n0)
                   n (quot (+ n1 shift) step)]
               (- (* step (range-sum n)) 
-                 (* n shift))))))
+                 (* n shift))))))  
   
 (defn make-fib 
   "Returns a function that takes two arguments [a0 a1] and
