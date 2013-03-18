@@ -15,15 +15,24 @@
   (is (= [3 4] (cond-vector false 1 false 2 true 3 true 4 false 5))))
 
 (deftest test-make-matrix
-  (let [m (make-matrix [[1 2 3][4 5 6]])]
-    (is (= 2 (m :rows)))
-    (is (= 3 (m :cols)))
-    (is (= 1 (m :entry 0 0)))
-    (is (= 2 (m :entry 0 1)))
-    (is (= 3 (m :entry 0 2)))
-    (is (= 4 (m :entry 1 0)))
-    (is (= 5 (m :entry 1 1)))
-    (is (= 6 (m :entry 1 2)))))
+  (testing "from vector"
+           (let [m (make-matrix [[1 2 3][4 5 6]])]
+             (is (= 2 (m :rows)))
+             (is (= 3 (m :cols)))
+             (is (= 1 (m :entry 0 0)))
+             (is (= 2 (m :entry 0 1)))
+             (is (= 3 (m :entry 0 2)))
+             (is (= 4 (m :entry 1 0)))
+             (is (= 5 (m :entry 1 1)))
+             (is (= 6 (m :entry 1 2)))))
+  (testing "from seq"
+           (let [m (make-matrix (for [i (range 42)]
+                                  (range i (+ i 10))))]
+             (is (= 42 (m :rows)))
+             (is (= 10 (m :cols)))
+             (is (every? true? (for [i (range (m :rows))
+                                     j (range (m :cols))]
+                                 (= (+ i j) (m :entry i j))))))))
 
 (deftest test-interleave-all
   (is (= '(1 4 2 5 3 6)

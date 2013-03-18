@@ -18,7 +18,6 @@
     (->> (slurp file)
       (clojure.string/split-lines)
       (map parse-line)
-      vec
       util/make-matrix)))
 
 ;; PROBLEM 1
@@ -48,8 +47,7 @@
 (defn solve-2 
   ([] (solve-2 (int 4e6)))
   ([n]
-    (->> 
-      ((math/make-fib 1 4) 2 8)
+    (->> ((math/make-fib 1 4) 2 8)
       (take-while (fn [a] (>= n a)))
       (reduce +))))
 

@@ -16,12 +16,12 @@
 
 (defn make-matrix [rows]
   (let [rc (count rows)
-        cc (count (rows 0))]
+        cc (count (nth rows 0))]
     (fn [kwd & [i j]]
       (condp = kwd
         :rows rc
         :cols cc
-        :entry ((rows i) j)))))
+        :entry (nth (nth rows i) j)))))
 
 (defn interleave-all [c1 c2]
   (lazy-seq
