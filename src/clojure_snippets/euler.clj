@@ -5,8 +5,8 @@
 
 (defn- slurp-digits [file]
   (->> (slurp file)
-    (clojure.string/split-lines)
-    (clojure.string/join)
+    clojure.string/split-lines
+    clojure.string/join
     (map (comp read-string str))))
 
 (defn- slurp-matrix [file sep]
@@ -18,7 +18,8 @@
     (->> (slurp file)
       (clojure.string/split-lines)
       (map parse-line)
-      vec)))
+      vec
+      util/make-matrix)))
 
 ;; PROBLEM 1
 
@@ -153,23 +154,25 @@
 
 (defn solve-11 
   ([] (solve-11 (slurp-matrix "resources/euler-11.txt" #"\s")))
-  ([rows]
-    (let [cnt (count rows)
-          number (fn [[i j]]
-                   (if (and (<= 0 i) (> cnt i) (<= 0 j) (> cnt j))
-                     ((rows i) j)
-                     0))
-          row (fn [[i j]] (for [k (range 4)] [i (+ j k)]))
-          col (fn [[i j]] (for [k (range 4)] [(+ i k) j]))
-          diag1 (fn [[i j]] (for [k (range 4)] [(+ i k) (+ j k)]))
-          diag2 (fn [[i j]] (for [k (range 4)] [(- i k) (+ j k)]))
-          prod (fn [ijs] (reduce * (map number ijs)))]
-      (->> (for [i (range cnt)
-                 j (range cnt)]
-             [(prod (row [i j]))
-              (prod (col [i j]))
-              (prod (diag1 [i j]))
-              (prod (diag2 [i j]))])
+  ([matrix]
+    (let [row (fn [i j] (for [k (range 4)] [i (+ j k)]))
+          col (fn [i j] (for [k (range 4)] [(+ i k) j]))
+          diag1 (fn [i j] (for [k (range 4)] [(+ i k) (+ j k)]))
+          diag2 (fn [i j] (for [k (range 4)] [(- i k) (+ j k)]))
+          prod (fn [ijs] (->> ijs
+                           (map (fn [[i j]] (if (and (<= 0 i) 
+                                                     (> (matrix :rows) i) 
+                                                     (<= 0 j) 
+                                                     (> (matrix :cols) j))
+                                              (matrix :entry i j)
+                                              0)))
+                           (reduce *)))]
+      (->> (for [i (range (matrix :rows))
+                 j (range (matrix :cols))]
+             [(prod (row i j))
+              (prod (col i j))
+              (prod (diag1 i j))
+              (prod (diag2 i j))])
         (reduce concat)
         (reduce max)))))
 
@@ -185,16 +188,17 @@
 
 (defn solve-18 
   ([] (solve-18 (slurp-matrix "resources/euler-18.txt" #"\s")))
-  ([rows]
-    (let [cnt (count rows)
-          number (fn [[i j]] ((rows i) j))
-          neighbors (fn [[i j]] [[(inc i) j] [(inc i) (inc j)]])
-          dist (fn [_ ij] (- 100 (number ij)))
+  ([matrix]
+    (let [neighbors (fn [[i j]] [[(inc i) j] [(inc i) (inc j)]])
+          dist (fn [_ [i j]] (- 100 (matrix :entry i j)))
           dijkstra (util/make-dijkstra neighbors dist)
           source [0 0]
-          terminals (for [col (range cnt)] [(dec cnt) col])
-          path (dijkstra [source] terminals)]      
-      (+ (number source) (- (* 100 (dec cnt)) ((first path) :dist))))))
+          terminals (for [col (range (matrix :rows))] 
+                      [(dec (matrix :rows)) col])
+          path (dijkstra [source] terminals)]
+      (+ (apply (partial matrix :entry) source) 
+         (- (* 100 (dec (matrix :rows))) 
+            ((first path) :dist))))))
 
 ;; PROBLEM 67
 
@@ -204,34 +208,35 @@
 
 (defn solve-81 
   ([] (solve-81 (slurp-matrix "resources/euler-81.txt" #",")))
-  ([rows]
-    (let [cnt (count rows)
-          number (fn [[i j]] ((rows i) j))
-          neighbors (fn [[i j]]
-                      (util/cond-vector (> cnt (inc i)) [(inc i) j]
-                                        (> cnt (inc j)) [i (inc j)]))
-          dist (fn [_ ij] (number ij))
+  ([matrix]
+    (let [neighbors (fn [[i j]]
+                      (util/cond-vector 
+                        (> (matrix :rows) (inc i)) [(inc i) j]
+                        (> (matrix :cols) (inc j)) [i (inc j)]))
+          dist (fn [_ [i j]] (matrix :entry i j))
           dijkstra (util/make-dijkstra neighbors dist)
           source [0 0]
-          terminal [(dec cnt) (dec cnt)]
+          terminal [(dec (matrix :rows)) (dec (matrix :cols))]
           path (dijkstra [source] [terminal])]
-      (+ (number source) ((first path) :dist)))))
+      (+ (apply (partial matrix :entry) source)
+         ((first path) :dist)))))
 
 ;; PROBLEM 82
 
 (defn solve-82
   ([] (solve-82 (slurp-matrix "resources/euler-82.txt" #",")))
-  ([rows]
-    (let [cnt (count rows)
-          number (fn [[i j]] ((rows i) j))
-          neighbors (fn [[i j]]
-                      (util/cond-vector (and (<= 0 (dec i)) (<= 0 j)) [(dec i) j]
-                                        (and (> cnt (inc i)) (<= 0 j)) [(inc i) j]
-                                        (> cnt (inc j)) [i (inc j)]))
-          dist (fn [_ ij] (number ij))
+  ([matrix]
+    (let [neighbors (fn [[i j]]
+                      (util/cond-vector 
+                        (and (<= 0 (dec i)) (<= 0 j)) [(dec i) j]
+                        (and (> (matrix :rows) (inc i)) (<= 0 j)) [(inc i) j]
+                        (> (matrix :cols) (inc j)) [i (inc j)]))
+          dist (fn [_ [i j]] (matrix :entry i j))
           dijkstra (util/make-dijkstra neighbors dist)
-          sources (for [i (range cnt)] [i -1])
-          terminals (for [i (range cnt)] [i (dec cnt)])
+          sources (for [i (range (matrix :rows))] 
+                    [i -1])
+          terminals (for [i (range (matrix :rows))] 
+                      [i (dec (matrix :cols))])
           path (dijkstra sources terminals)]
       ((first path) :dist))))
 
@@ -239,20 +244,20 @@
 
 (defn solve-83
   ([] (solve-83 (slurp-matrix "resources/euler-83.txt" #",")))
-  ([rows]
-    (let [cnt (count rows)
-          number (fn [[i j]] ((rows i) j))
-          neighbors (fn [[i j]]
-                      (util/cond-vector (<= 0 (dec i)) [(dec i) j]
-                                        (> cnt (inc i)) [(inc i) j]
-                                        (<= 0 (dec j)) [i (dec j)]
-                                        (> cnt (inc j)) [i (inc j)]))
-          dist (fn [_ ij] (number ij))
+  ([matrix]
+    (let [neighbors (fn [[i j]]
+                      (util/cond-vector 
+                        (<= 0 (dec i)) [(dec i) j]
+                        (> (matrix :rows) (inc i)) [(inc i) j]
+                        (<= 0 (dec j)) [i (dec j)]
+                        (> (matrix :cols) (inc j)) [i (inc j)]))
+          dist (fn [_ [i j]] (matrix :entry i j))
           dijkstra (util/make-dijkstra neighbors dist)
           source [0 0]
-          terminal [(dec cnt) (dec cnt)]
+          terminal [(dec (matrix :rows)) (dec (matrix :cols))]
           path (dijkstra [source] [terminal])]
-      (+ (number source) ((first path) :dist)))))
+      (+ (apply (partial matrix :entry) source)
+         ((first path) :dist)))))
 
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape

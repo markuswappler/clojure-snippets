@@ -14,6 +14,17 @@
   (is (= [1 2 5] (cond-vector true 1 true 2 false 3 false 4 true 5)))
   (is (= [3 4] (cond-vector false 1 false 2 true 3 true 4 false 5))))
 
+(deftest test-make-matrix
+  (let [m (make-matrix [[1 2 3][4 5 6]])]
+    (is (= 2 (m :rows)))
+    (is (= 3 (m :cols)))
+    (is (= 1 (m :entry 0 0)))
+    (is (= 2 (m :entry 0 1)))
+    (is (= 3 (m :entry 0 2)))
+    (is (= 4 (m :entry 1 0)))
+    (is (= 5 (m :entry 1 1)))
+    (is (= 6 (m :entry 1 2)))))
+
 (deftest test-interleave-all
   (is (= '(1 4 2 5 3 6)
          (interleave-all [1 2 3] [4 5 6])))
