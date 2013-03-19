@@ -93,3 +93,27 @@
                                         :prev node}})))]
               (recur (assoc visited node node-data)
                      (apply merge (dissoc reachable node) updates)))))))))
+
+(defn kruskal [edges]
+  (let [find-comp (fn [components node]
+                    (if-let [c (->> components
+                                 (filter (fn [c] (c node)))
+                                 first)]
+                      c
+                      #{node}))]
+    (loop [edges (sort-by :weight edges)
+           components #{}
+           forest []]
+      (if-let [{:keys [node-1 node-2 weight] :as edge} (first edges)]
+        (let [comp-1 (find-comp components node-1)
+              comp-2 (find-comp components node-2)]
+          (if (= comp-1 comp-2)
+            (recur (rest edges) 
+                   components 
+                   forest)
+            (recur (rest edges)
+                   (-> components
+                     (disj comp-1 comp-2)
+                     (conj (clojure.set/union comp-1 comp-2)))
+                   (conj forest edge))))
+        forest))))    

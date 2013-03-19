@@ -161,3 +161,31 @@
                      {:node 1 :dist 0}]
                     (dijkstra [1] [16])))
              (is (nil? (dijkstra [1] [32]))))))
+
+(deftest test-kruskal
+  (testing "connected"
+           (let [edges #{{:node-1 :a :node-2 :b :weight 4}
+                         {:node-1 :a :node-2 :c :weight 2}
+                         {:node-1 :b :node-2 :c :weight 3}
+                         {:node-1 :c :node-2 :d :weight 1}
+                         {:node-1 :d :node-2 :e :weight 7}
+                         {:node-1 :d :node-2 :f :weight 5}
+                         {:node-1 :e :node-2 :f :weight 6}}
+                 mst [{:node-1 :c :node-2 :d :weight 1}
+                      {:node-1 :a :node-2 :c :weight 2}
+                      {:node-1 :b :node-2 :c :weight 3}
+                      {:node-1 :d :node-2 :f :weight 5}
+                      {:node-1 :e :node-2 :f :weight 6}]]
+             (is (= mst (kruskal edges)))))
+  (testing "not connected"
+           (let [edges [{:node-1 :a :node-2 :b :weight 4}
+                        {:node-1 :a :node-2 :c :weight 2}
+                        {:node-1 :b :node-2 :c :weight 3}
+                        {:node-1 :d :node-2 :e :weight 7}
+                        {:node-1 :d :node-2 :f :weight 5}
+                        {:node-1 :e :node-2 :f :weight 6}]
+                 msf [{:node-1 :a :node-2 :c :weight 2}
+                      {:node-1 :b :node-2 :c :weight 3}
+                      {:node-1 :d :node-2 :f :weight 5}
+                      {:node-1 :e :node-2 :f :weight 6}]]
+             (is (= msf (kruskal edges))))))                        
