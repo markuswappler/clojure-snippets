@@ -75,6 +75,15 @@
                                            [537	699	497	121	956]
                                            [805	732	524	37	331]])))))
 
+(deftest test-solve-107
+  (is (= 150 (solve-107 (util/make-matrix [[nil	16 12 21 nil nil nil]
+                                           [16 nil nil 17 20 nil nil]
+                                           [12 nil nil 28 nil 31 nil]
+                                           [21 17 28 nil 18 19 23]
+                                           [nil 20 nil 18 nil nil 11]
+                                           [nil nil 31 19 nil nil 27]
+                                           [nil nil nil 23 11 27 nil]])))))
+
 (deftest test-solve-351-slow
   (is (= 30 (solve-351-slow 5)))
   (is (= 138 (solve-351-slow 10)))

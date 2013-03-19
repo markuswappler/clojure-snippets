@@ -9,16 +9,24 @@
     clojure.string/join
     (map (comp read-string str))))
 
-(defn- slurp-matrix [file sep]
-  (let [parse-line (fn [line]
-                     (->> (clojure.string/split line sep) 
-                       (map #(if (= \0 (first %)) (subs % 1) %))
-                       (map read-string)
-                       vec))]
-    (->> (slurp file)
-      clojure.string/split-lines
-      (map parse-line)
-      util/make-matrix)))
+(defn- slurp-matrix
+  ([file sep]
+    (slurp-matrix file sep (comp
+                             read-string
+                             (fn [entry] 
+                               (if (= \0 (first entry)) 
+                                 (subs entry 1) 
+                                 entry)))))
+  ([file sep parse-entry]
+    (let [parse-line (fn [line]
+                       (->> (clojure.string/split line sep) 
+                         (map parse-entry)
+                         vec))]
+      (->> (slurp file)
+        clojure.string/split-lines
+        (map parse-line)
+        vec
+        util/make-matrix))))
 
 ;; PROBLEM 1
 
@@ -268,6 +276,23 @@
           path (dijkstra [source] [terminal])]
       (+ (apply (partial matrix :entry) source)
          ((first path) :dist)))))
+
+;; PROBLEM 107
+
+(defn solve-107
+  ([] (solve-107 (slurp-matrix "resources/euler-107.txt" 
+                               #"," 
+                               (fn [entry]
+                                 (when (not= "-" entry)
+                                   (read-string entry))))))
+  ([matrix]
+    (let [edges (for [i (range (matrix :rows))
+                      j (range i)
+                      :let [weight (matrix :entry i j)]
+                      :when weight]
+                  {:node-1 i :node-2 j :weight weight})
+          weight (fn [edges] (reduce + (map :weight edges)))]
+      (- (weight edges) (weight (util/kruskal edges))))))
 
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape
