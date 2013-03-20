@@ -150,25 +150,23 @@
   all nodes being incident with one of the given edges. 
   Additional isolated nodes do not matter."
   [edges]
-  (let [find-comp (fn [components node]
-                    (if-let [c (->> components
-                                 (filter (fn [c] (c node)))
-                                 first)]
-                      c
-                      #{node}))]
-    (loop [edges (sort-by :weight edges)
-           components #{}
-           forest []]
-      (if-let [{:keys [node-1 node-2 weight] :as edge} (first edges)]
-        (let [comp-1 (find-comp components node-1)
-              comp-2 (find-comp components node-2)]
-          (if (= comp-1 comp-2)
-            (recur (rest edges) 
-                   components 
-                   forest)
-            (recur (rest edges)
-                   (-> components
-                     (disj comp-1 comp-2)
-                     (conj (clojure.set/union comp-1 comp-2)))
-                   (conj forest edge))))
-        forest))))    
+  (loop [edges (sort-by :weight edges)
+         components #{}
+         forest []]
+    (if-let [{:keys [node-1 node-2 weight] :as edge} (first edges)]
+      (let [find-comp (fn [node]
+                        (if-let [comp (first (filter #(% node) components))]
+                          comp
+                          #{node}))
+            comp-1 (find-comp node-1)
+            comp-2 (find-comp node-2)]
+        (if (= comp-1 comp-2)
+          (recur (rest edges) 
+                 components 
+                 forest)
+          (recur (rest edges)
+                 (-> components
+                   (disj comp-1 comp-2)
+                   (conj (clojure.set/union comp-1 comp-2)))
+                 (conj forest edge))))
+      forest)))    
