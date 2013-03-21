@@ -4,7 +4,8 @@
   "cond(itional )join
   Like conj with the difference that each item
   has a prepending test. The item is conjoined
-  only in the case of test being evaluated to true."
+  only in the case of test being evaluated to 
+  logical true."
   ([coll test item]
     `(if ~test
        (conj ~coll ~item)

@@ -291,8 +291,9 @@
                       :let [weight (matrix :entry i j)]
                       :when weight]
                   {:node-1 i :node-2 j :weight weight})
-          weight (fn [edges] (reduce + (map :weight edges)))]
-      (- (weight edges) (weight (util/kruskal edges))))))
+          total-weight (fn [edges] (reduce + (map :weight edges)))]
+      (- (total-weight edges) 
+         (total-weight (util/kruskal edges))))))
 
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape
