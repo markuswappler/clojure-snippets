@@ -4,7 +4,7 @@ This is repo contains small pieces of Clojure code.
 It may be explorations, puzzle solving code, 
 or samples of interesting concepts.
 
-### euler.clj
+#### euler.clj
 Solvers for problems from [Project Euler][euler].
 
 [euler]: http://projecteuler.net/ "projecteuler.net"
