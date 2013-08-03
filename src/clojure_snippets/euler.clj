@@ -228,7 +228,7 @@
 ;; (far less) remaining values
 
 (defn solve-14
-  ([] (solve-14 1000000))
+  ([] (solve-14 (int 1e6)))
   ([n]
     (let [candidates (int-array n 0)
           successor (fn [k]
@@ -250,6 +250,17 @@
 (defn solve-15 
   ([] (solve-15 20))
   ([n] (math/binom (* 2 n) n)))
+
+;; PROBLEM 16
+
+(defn solve-16
+  ([] (solve-16 1000))
+  ([n]
+    (->> (numeric/expt 2 n)
+      str
+      (map str)
+      (map edn/read-string)
+      (reduce +))))
 
 ;; PROBLEM 18
 
