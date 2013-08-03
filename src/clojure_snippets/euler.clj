@@ -182,6 +182,26 @@
         (reduce concat)
         (reduce max)))))
 
+;; PROBLEM 12
+;; tau(k) := #{d: 1<=d<=k, d|k} 
+;; k-th triangle number is k*(k+1)/2
+;; k even: k/2 and k+1 are coprime => number of factors is tau(k/2)*tau(k+1)
+;; k odd: (k+1)/2 and k are coprime => number of factors is tau((k+1)/2)*tau(k)
+
+(defn solve-12 
+  ([] (solve-12 500))
+  ([n]
+  (let [divisors (fn [k]
+                   (if (even? k)
+                     (* (math/tau (quot k 2)) (math/tau (inc k)))
+                     (* (math/tau (quot (inc k) 2)) (math/tau k))))]
+    (loop [k 2 triangle-number 1]
+      (let [tn (+ triangle-number k)
+            d (divisors k)]
+        (if (< n d)
+          tn
+          (recur (inc k) tn)))))))
+    
 ;; PROBLEM 15
 ;; make 2n decisions: right or down
 ;; choose n down-decisions from all decisions

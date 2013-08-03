@@ -42,6 +42,13 @@
                                          [0 1 2 1]
                                          [0 0 1 2]])))))
 
+(deftest test-solve-12
+  (is (= 3 (solve-12 1)))
+  (is (= 6 (solve-12 2)))
+  (is (= 6 (solve-12 3)))
+  (is (= 28 (solve-12 4)))
+  (is (= 28 (solve-12 5))))
+
 (deftest test-solve-15
   (is (= 6 (solve-15 2))))
 

@@ -18,6 +18,17 @@
         acc
         (recur n (dec k) (/ (* acc (+ n (- k) 1)) k))))))
 
+(defn +mod 
+  "Adds the summands modulo m.
+  All summands s are supposed to be 0 <= s < m."
+  [m & summands]
+  (let [plus (fn [x y]
+               (let [res (+ x y)]
+                 (if (> m res)
+                   res
+                   (- res m))))]
+    (reduce plus summands)))  
+
 (defn range-sum
   "Fast computation of (reduce + (range ...)).
   Contrary to the range function both bounds are inclusive."
@@ -31,7 +42,7 @@
       :else (let [shift (- step n0)
                   n (quot (+ n1 shift) step)]
               (- (* step (range-sum n)) 
-                 (* n shift))))))  
+                 (* n shift))))))
   
 (defn make-fib 
   "Returns a function that takes two arguments [a0 a1] and
@@ -59,6 +70,18 @@
       (cons 2 (for [k (range 3 n+1 2)
                     :when (aget ps k)]
                 k)))))
+
+(defn divisors 
+  "all 1<=d<=n with d|n"
+  [n]
+  (for [k (range 1 (inc n))
+        :when (zero? (mod n k))]
+    k))
+
+(defn tau
+  "number of divisors"
+  [n]
+  (count (divisors n)))
 
 ;; Idea is from http://mathoverflow.net/questions/99473/calculating-mobius-function
 ;; Sieve like strategy:

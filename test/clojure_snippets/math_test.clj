@@ -3,7 +3,7 @@
   (:use clojure.test
         clojure-snippets.math))
 
-(deftest sgn-test
+(deftest test-sgn
   (is (= 0 (sgn 0)))
   (is (= 0 (sgn 0.0)))
   (is (= -1 (sgn -42)))
@@ -11,7 +11,7 @@
   (is (= -1 (sgn -47.11)))
   (is (= 1 (sgn 47.11))))
 
-(deftest binom-test
+(deftest test-binom
   (let [pascal-row (fn [n] (for [k (range (inc n))] (binom n k)))]
     (is (= '(1) (pascal-row 0)))
     (is (= '(1 1) (pascal-row 1)))
@@ -22,7 +22,30 @@
     (is (= '(1 6 15 20 15 6 1) (pascal-row 6)))
     (is (= '(1 7 21 35 35 21 7 1) (pascal-row 7)))))
 
-(deftest range-sum-test
+(deftest test-plus
+  (let [p (partial +mod 4)]
+    (is (= 0 (p 0 0)))
+    (is (= 1 (p 0 1)))
+    (is (= 1 (p 1 0)))
+    (is (= 2 (p 0 2)))
+    (is (= 2 (p 1 1)))
+    (is (= 2 (p 2 0)))
+    (is (= 3 (p 0 3)))
+    (is (= 3 (p 1 2)))
+    (is (= 3 (p 2 1)))
+    (is (= 3 (p 3 0)))
+    (is (= 0 (p 1 3)))
+    (is (= 0 (p 2 2)))
+    (is (= 0 (p 3 1)))
+    (is (= 1 (p 2 3)))
+    (is (= 1 (p 3 2)))
+    (is (= 2 (p 3 3)))
+    (is (= 7 (+mod 12 3 4)))
+    (is (= 7 (+mod 12 6 13)))
+    (is (= 7 (+mod 12 10 9)))
+    (is (= 4 (+mod 12 8 8)))))    
+
+(deftest test-range-sum
   (is (= (+ 1 2 3 4 5) (range-sum 5)))
   (is (= (+ 41 42) (range-sum 41 42)))
   (is (zero? (range-sum 42 41)))
@@ -40,7 +63,7 @@
   (is (zero? (range-sum 10 1 1)))
   (is (= 4711 (range-sum 4711 4711 1))))  
 
-(deftest make-fib-test
+(deftest test-make-fib
   (is (= '(0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610)
          (take 16 ((make-fib 1 1) 0 1))))
   (is (= '(1 2 1 2 1 2 1 2)
@@ -50,24 +73,46 @@
   (is (= '(-1 1 2 1 -1 -2 -1 1 2 1 -1 -2 -1 1 2 1)
          (take 16 ((make-fib -1 1) -1 1)))))
 
-(deftest primes-test
+(deftest test-primes
   (let [ps '(2 3 5 7 11 13 17 19 23 29 31 37 41 43 
              47 53 59 61 67 71 73 79 83 89 97 101)]
     (is (= ps (primes 101)))
     (is (= ps (primes 102)))))
 
-(deftest moebius-test
+(deftest test-divisors
+  (is (= '() (divisors 0)))
+  (is (= '(1) (divisors 1)))
+  (is (= '(1 2) (divisors 2)))
+  (is (= '(1 3) (divisors 3)))
+  (is (= '(1 2 4) (divisors 4)))
+  (is (= '(1 5) (divisors 5)))
+  (is (= '(1 2 3 6) (divisors 6)))
+  (is (= '(1 7) (divisors 7)))
+  (is (= '(1 2 4 8) (divisors 8))))
+
+(deftest test-tau
+  (is (= 0 (tau 0)))
+  (is (= 1 (tau 1)))
+  (is (= 2 (tau 2)))
+  (is (= 2 (tau 3)))
+  (is (= 3 (tau 4)))
+  (is (= 2 (tau 5)))
+  (is (= 4 (tau 6)))
+  (is (= 2 (tau 7)))
+  (is (= 4 (tau 8))))
+
+(deftest test-moebius
   (let [mus [1 -1 -1 0 -1 1 -1 0 0 1 -1 0 -1 1 1 0 -1 0 -1 0 1 1 -1 0 0]]
     (is (= mus (rest (into [] (moebius 25)))))))
 
-(deftest phi-summatory-test
+(deftest test-phi-summatory
   (let [sums [1 2 4 6 10 12 18 22 28]]
     (is (= sums (map phi-summatory (range 1 10))))
     (is (= (- (phi-summatory 4711) (phi-summatory 41))
            (phi-summatory 42 4711)))
     (is (= (phi-summatory 100) (phi-summatory 1 100)))))
         
-(deftest coprimes-test
+(deftest test-coprimes
   (let [odd #{[1 2] [1 4] [1 6] [1 8]
               [2 3] [2 5] [2 7] [2 9]
               [3 4] [3 8]
