@@ -2,6 +2,18 @@
   (:use clojure.test
         clojure-snippets.util))
 
+(deftest test-amin
+  (is (= 0 (amin (int-array [1 2 3]))))
+  (is (= 2 (amin (int-array [3 2 1]))))
+  (is (= 3 (amin (int-array [3 2 1 0 1 2 3]))))
+  (is (= 2 (amin (int-array [3 2 1 3 2 1])))))
+
+(deftest test-max
+  (is (= 2 (amax (int-array [1 2 3]))))
+  (is (= 0 (amax (int-array [3 2 1]))))
+  (is (= 3 (amax (int-array [3 2 1 4 1 2 3]))))
+  (is (= 2 (amax (int-array [3 2 4 3 2 4])))))
+
 (deftest test-condj
   (is (= [1 2 3] (condj [1 2] (< 1 2) 3)))
   (is (= [1 2] (condj [1 2] (> 1 2) 3)))

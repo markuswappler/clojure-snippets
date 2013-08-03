@@ -1,5 +1,19 @@
 (ns clojure-snippets.util)
 
+(defn amin 
+  "Smallest index of an array, that realizes a minimum."
+  [a]  
+  (areduce a idx ret 0 (if (> (aget a ret) (aget a idx))
+                         idx
+                         ret)))
+
+(defn amax 
+  "Smallest index of an array, that realizes a maximum."
+  [a]
+  (areduce a idx ret 0 (if (< (aget a ret) (aget a idx))
+                         idx
+                         ret)))
+
 (defmacro condj
   "cond(itional )join
   Like conj with the difference that each item

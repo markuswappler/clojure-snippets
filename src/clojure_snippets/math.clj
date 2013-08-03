@@ -53,6 +53,19 @@
     (lazy-seq 
       (cons a0 (fib a1 (+ (* c0 a0) (* c1 a1)))))))
 
+(defn collatz 
+  "Returns the Collatz Sequence starting at k.
+  The successor of an element m is:
+  m/2 for m even, 3m+1 for m odd.
+  Proceed this until 1 is reached."
+  [k]
+  (cons
+    k
+    (cond
+      (= 1 k) nil
+      (even? k) (lazy-seq (collatz (quot k 2)))
+      :else (lazy-seq (collatz (inc (* 3 k)))))))
+
 ;; Uses java-array for the sake of efficiency.
 (defn primes 
   "Lists all prime numbers up to n via the sieve of Eratosthenes."

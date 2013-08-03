@@ -210,8 +210,39 @@
 
 ;; PROBLEM 13
 
-(defn solve-13 [] (slurp-numbers "resources/euler-13.txt"))
-    
+(defn solve-13 [] 
+  (->> (slurp-numbers "resources/euler-13.txt")
+    (reduce +)
+    str
+    (take 10)
+    (apply str)))
+
+;; PROBLEM 14
+;; one has only to consider numbers between n/2 and n,
+;; others follow in a longer Collatz Sequence starting at
+;; twice its value
+;; step 1: foreach remaining value go through the sequence
+;; until a value in the given intervall is found
+;; this can be neglected
+;; step 2: compute the length of the sequence of the
+;; (far less) remaining values
+
+(defn solve-14
+  ([] (solve-14 1000000))
+  ([n]
+    (let [candidates (int-array n 0)
+          successor (fn [k]
+                      (->> (rest (math/collatz k))
+                        (drop-while #(<= n %))
+                        first))]
+      (do
+        (doseq [k (range (quot n 2) n)]
+          (aset candidates (successor k) -1))
+        (doseq [k (range (quot n 2) n)
+                :when (zero? (aget candidates k))]
+          (aset candidates k (count (math/collatz k))))
+        (util/amax candidates)))))
+
 ;; PROBLEM 15
 ;; make 2n decisions: right or down
 ;; choose n down-decisions from all decisions
