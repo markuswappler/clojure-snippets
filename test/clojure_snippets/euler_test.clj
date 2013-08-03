@@ -55,6 +55,10 @@
 (deftest test-solve-16
   (is (= 26 (solve-16 15))))
 
+(deftest test-solve-17
+  (is (= 23 (solve-17 342)))
+  (is (= 20 (solve-17 115))))
+
 (deftest test-solve-18
   (is (= 23 (solve-18 (util/make-matrix [[3] 
                                          [7 4] 

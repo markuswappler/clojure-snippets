@@ -262,6 +262,57 @@
       (map edn/read-string)
       (reduce +))))
 
+;; PROBLEM 17
+
+(defn word-number [k]
+  (condp = k
+    0 ""
+    1 "one"
+    2 "two"
+    3 "three"
+    4 "four"
+    5 "five"
+    6 "six"
+    7 "seven"
+    8 "eight"
+    9 "nine"
+    10 "ten"
+    11 "eleven"
+    12 "twelve"
+    13 "thirteen"
+    14 "fourteen"
+    15 "fifteen"
+    16 "sixteen"
+    17 "seventeen"
+    18 "eighteen"
+    19 "nineteen"
+    20 "twenty"
+    30 "thirty"
+    40 "forty"
+    50 "fifty"
+    60 "sixty"
+    70 "seventy"
+    80 "eighty"
+    90 "ninety"
+    1000 "one thousend"
+    (if (> 100 k)
+      (let [dec (word-number (* (quot k 10) 10))
+            unit (word-number (mod k 10))]
+        (clojure.string/join " " [dec unit]))
+      (let [cent (clojure.string/join " " [(word-number (quot k 100)) "hundred"])
+            dec (word-number (mod k 100))]
+        (if (empty? dec)
+          cent
+          (clojure.string/join " " [cent "and" dec]))))))
+
+(defn solve-17
+  ([] (->> (range 1 1001)
+        (map solve-17)
+        (reduce +)))
+  ([k] (-> (word-number k)
+         (clojure.string/replace " " "")
+         count)))
+
 ;; PROBLEM 18
 
 (defn solve-18 
