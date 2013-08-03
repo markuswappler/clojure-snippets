@@ -1,7 +1,13 @@
 (ns clojure-snippets.euler
-  (:require [clojure.math.numeric-tower :as numeric]
+  (:require [clojure.edn :as edn]
+            [clojure.math.numeric-tower :as numeric]
             [clojure-snippets.math :as math]
             [clojure-snippets.util :as util]))
+
+(defn- slurp-numbers [file]
+  (->> (slurp file)
+    (clojure.string/split-lines)
+    (map edn/read-string)))
 
 (defn- slurp-digits [file]
   (->> (slurp file)
@@ -201,6 +207,10 @@
         (if (< n d)
           tn
           (recur (inc k) tn)))))))
+
+;; PROBLEM 13
+
+(defn solve-13 [] (slurp-numbers "resources/euler-13.txt"))
     
 ;; PROBLEM 15
 ;; make 2n decisions: right or down
