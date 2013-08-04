@@ -2,7 +2,8 @@
   (:require [clojure.edn :as edn]
             [clojure.math.numeric-tower :as numeric]
             [clojure-snippets.math :as math]
-            [clojure-snippets.util :as util]))
+            [clojure-snippets.util :as util]
+            [clojure-snippets.date :as date]))
 
 (defn- slurp-numbers [file]
   (->> (slurp file)
@@ -328,6 +329,15 @@
       (+ (apply (partial matrix :entry) source) 
          (- (* 100 (dec (matrix :rows))) 
             ((first path) :dist))))))
+
+;; PROBLEM 19
+
+(defn solve-19 []
+  (->> (for [month (range 1 13)
+             year (range 1901 2001)]
+         (date/weekday [1 month year]))
+    (filter #{:sunday})
+    count))
 
 ;; PROBLEM 20
 
