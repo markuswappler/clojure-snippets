@@ -3,6 +3,13 @@
   (:use clojure.test
         clojure-snippets.euler))
 
+(deftest test-pandigital?
+  (is (true? (pandigital? "9876543210")))
+  (is (false? (pandigital? "0987654321")))
+  (is (false? (pandigital? "123456789")))
+  (is (false? (pandigital? "12345678901")))
+  (is (true? (pandigital? "1357902468"))))
+
 (deftest test-solve-1
   (is (= 23 (solve-1 10))))
 

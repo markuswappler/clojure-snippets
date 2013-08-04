@@ -2,11 +2,24 @@
   (:require [clojure.math.numeric-tower :as numeric] 
             [clojure-snippets.util :as util]))
 
-(defn sgn [x]
+(defn sgn 
+  "signum function"
+  [x]
   (cond 
     (neg? x) -1
     (pos? x) 1
     :else 0))
+
+(defn expt 
+  "exponentation for nonnegative integral powers.
+  op is an arbitrary binary operation, id its unit element,
+  e.g. (expt + 0 3 4) is equivalent to (* 3 4)"
+  [op id base pow]
+  (loop [x base n pow res id]
+    (cond
+      (zero? n) res
+      (even? n) (recur (op x x) (quot n 2) res)
+      :else (recur (op x x) (quot n 2) (op res x)))))      
 
 (defn binom
   "binomial coefficient"
@@ -52,6 +65,23 @@
   (fn fib [a0 a1] 
     (lazy-seq 
       (cons a0 (fib a1 (+ (* c0 a0) (* c1 a1)))))))
+
+(defn fib
+  "Computes the k-th element fk of the Fibonacci sequence,
+  that is f0 = 0, f1 = 1, fk = fk-1 + fk-2.
+  Uses fast matrix exponentiation:
+  [[fk+1 fk]  = [[f2=1 f1=1]  * [[fk fk-1]
+   [fk fk-1]]    [f1=1 f0=0]]    [fk-1 fk-2]]
+              = [[1 1]  k
+                 [1 0]]"
+  [k]
+  (let [mult (fn [[x11 x12 x22] [y11 y12 y22]]
+               [(+ (* x11 y11) (* x12 y12))
+                (+ (* x11 y12) (* x12 y22))
+                (+ (* x12 y12) (* x22 y22))])
+        id [1 0 1]
+        f [1N 1N 0N]]
+    (fnext (expt mult id f k))))
 
 (defn collatz 
   "Returns the Collatz Sequence starting at k.

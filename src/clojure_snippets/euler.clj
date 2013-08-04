@@ -35,6 +35,21 @@
         vec
         util/make-matrix))))
 
+(defn pandigital? [s]
+  (if (and (= 10 (count s))
+           (re-find #"0" (subs s 1))
+           (re-find #"1" s)
+           (re-find #"2" s)
+           (re-find #"3" s)
+           (re-find #"4" s)
+           (re-find #"5" s)
+           (re-find #"6" s)
+           (re-find #"7" s)
+           (re-find #"8" s)
+           (re-find #"9" s))
+    true
+    false))
+
 ;; PROBLEM 1
 
 (defn solve-1 
@@ -423,6 +438,28 @@
           path (dijkstra [source] [terminal])]
       (+ (apply (partial matrix :entry) source)
          ((first path) :dist)))))
+
+;; PROBLEM 104
+
+;; brute force - proves to be far too slow
+
+(defn solve-104-slow []
+  (let [fib ((math/make-fib 1 1) 0N 1N)
+        pd? (fn [f]
+              (let [s (str f)
+                    len (count s)
+                    fst (subs s 0 (min len 9))
+                    lst (subs s (max 0 (- len 9)))]
+                (and
+                  (pandigital? (str fst "0"))
+                  (pandigital? (str lst "0")))))]
+    (->> fib
+      (map-indexed (fn [i f] [i f]))
+      (drop-while (fn [[i f]] (not (pd? f))))
+      first
+      first)))
+
+(defn solve-104 [])
 
 ;; PROBLEM 107
 

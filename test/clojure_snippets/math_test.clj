@@ -11,6 +11,29 @@
   (is (= -1 (sgn -47.11)))
   (is (= 1 (sgn 47.11))))
 
+(deftest test-expt
+  (testing "exponentiation"
+           (let [pow (partial expt * 1)]
+             (is (= 1 (pow 0 0)))
+             (is (= 0 (pow 0 1)))
+             (is (= 0 (pow 0 2)))
+             (is (= 1 (pow 2 0)))
+             (is (= 2 (pow 2 1)))
+             (is (= 4 (pow 2 2)))
+             (is (= 128 (pow 2 7)))
+             (is (= 256 (pow 2 8)))
+             (is (= 512 (pow 2 9)))
+             (is (= 1024 (pow 2 10)))
+             (is (= 27 (pow 3 3)))
+             (is (= 81 (pow 3 4)))
+             (is (= 64 (pow 4 3)))))
+  (testing "multiplication"
+           (let [mult (partial expt + 0)]
+             (is (= 0 (mult 3 0)))
+             (is (= 0 (mult 0 3)))
+             (is (= 12 (mult 3 4)))
+             (is (= 12 (mult 4 3))))))
+
 (deftest test-binom
   (let [pascal-row (fn [n] (for [k (range (inc n))] (binom n k)))]
     (is (= '(1) (pascal-row 0)))
@@ -72,6 +95,10 @@
          (take 4 ((make-fib 2 3) 1 4))))
   (is (= '(-1 1 2 1 -1 -2 -1 1 2 1 -1 -2 -1 1 2 1)
          (take 16 ((make-fib -1 1) -1 1)))))
+
+(deftest test-fib
+  (is (= '(0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610)
+         (map fib (range 16)))))
 
 (deftest test-collatz
   (is (= '(3 10 5 16 8 4 2 1) (collatz 3)))
