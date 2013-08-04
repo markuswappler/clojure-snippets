@@ -54,4 +54,6 @@
   (is (= :thursday (weekday [4 1 1900])))
   (is (= :friday (weekday [5 1 1900])))
   (is (= :sunday (weekday [4 8 2013])))
-  (is (= :monday (weekday [24 1 1977]))))
+  (is (= :monday (weekday [24 1 1977])))
+  (is (= :friday (weekday [17 8 1979])))
+  (is (= :thursday (weekday [26 6 1986]))))

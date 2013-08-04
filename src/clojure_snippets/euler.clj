@@ -351,9 +351,23 @@
       (map (comp read-string str))
       (reduce +))))
 
+;; PROBLEM 25
+
+(defn solve-25 
+  ([] (solve-25 1000))
+  ([digits]
+    (let [bound (numeric/expt 10 (dec digits))
+          fib ((math/make-fib 1 1) 0N 1N)]
+      (->> fib
+        (map-indexed (fn [i f] [i f]))
+        (drop-while (fn [[i f]] (> bound f)))
+        first
+        first))))
+
 ;; PROBLEM 67
 
-(defn solve-67 [] (solve-18 (slurp-matrix "resources/euler-67.txt" #"\s")))
+(defn solve-67 [] 
+  (solve-18 (slurp-matrix "resources/euler-67.txt" #"\s")))
 
 ;; PROBLEM 81
 
