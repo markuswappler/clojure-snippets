@@ -459,7 +459,20 @@
       first
       first)))
 
-(defn solve-104 [])
+;; adequate solution
+;; iterate through the Fibonacci sequence modulo 10^9 for the
+;; last digits; in case of a match compute the fibonacci number
+;; by fast computation via the index and check if the
+;; first digits match too.
+
+(defn solve-104 []
+  (let [m (int 1e9)]
+    (loop [idx 1 f0 0 f1 1]
+      (if (and (pandigital? (str f1 "0"))
+               (let [fst (subs (str (math/fib idx)) 0 9)]
+                 (pandigital? (str fst "0"))))
+        idx
+        (recur (inc idx) f1 (mod (+ f0 f1) m))))))
 
 ;; PROBLEM 107
 
