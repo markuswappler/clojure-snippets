@@ -108,6 +108,9 @@
                                            [nil nil 31 19 nil nil 27]
                                            [nil nil nil 23 11 27 nil]])))))
 
+(deftest test-solve-297
+  (is (= 7894453 (solve-297 (int 1e6)))))
+
 (deftest test-solve-351-slow
   (is (= 30 (solve-351-slow 5)))
   (is (= 138 (solve-351-slow 10)))

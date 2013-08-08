@@ -492,6 +492,35 @@
       (- (total-weight edges) 
          (total-weight (util/kruskal edges))))))
 
+;; PROBLEM 297
+;; s(n) := sum mu(k), 1<k<n.
+;; One can obtain the following recursion:
+;; Let f be the greatest Fibonacci number smaller than k.
+;; s(1) = 0, s(2) = 1, s(k) = s(f) + s(k-f) + k-f.
+;; Step 1: Compute s(k) for the Fibonacci sequence via
+;;         s(fk) = s(fk-1) + s(fk-2) + fk-2
+;; Step 2: Use the recursion to compute s(n).
+
+(defn solve-297 
+  ([] (solve-297 (long 1e17)))
+  ([n]
+    (let [terms (loop [a 1 b 2 res {1 0 2 1}]
+                  (let [nxt (+ a b)]
+                    (if (> n nxt)
+                      (recur b nxt (assoc res nxt (+ a (res a) (res b))))
+                      res)))
+          next-smaller-key (fn [m]
+                             (->> terms
+                               keys
+                               (filter #(> m %))
+                               (apply max)))]
+      (loop [res 0 m n]
+        (if (= 1 m)
+          res
+          (let [k (next-smaller-key m)
+                p (- m k)]
+            (recur (+ res (terms k) p) p)))))))
+
 ;; PROBLEM 351
 ;; use symmetry and compute the solution for a sector of 1/6 of the shape
 ;; consider e.g. the "spoke" to the right corner (inclusive) and the sector above
