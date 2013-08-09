@@ -492,6 +492,42 @@
       (- (total-weight edges) 
          (total-weight (util/kruskal edges))))))
 
+;; PROBLEM 206
+
+(defn solve-206 []
+  (let [placeholder (bigint (bigdec 1e19))
+        vary (fn [pos num]
+               (let [dec (numeric/expt 10 pos)]
+                 (map (fn [dgt] (+ num (* dgt dec))) (range 10))))
+        match (fn [len pattern num]
+                (let [regex (-> pattern
+                              (clojure.string/replace "_" "\\d")
+                              re-pattern)
+                      dbl (str (* num num))
+                      s (if (= :all len)
+                          dbl
+                          (subs dbl (- (count dbl) len)))]
+                  (re-matches regex s)))]
+    (->> [placeholder]
+      (mapcat (partial vary 0))
+      (filter (partial match 1 "0"))
+      (mapcat (partial vary 1))
+      (mapcat (partial vary 2))
+      (filter (partial match 3 "9_0"))
+      (mapcat (partial vary 3))
+      (mapcat (partial vary 4))
+      (filter (partial match 5 "8_9_0"))
+      (mapcat (partial vary 5))
+      (mapcat (partial vary 6))
+      (filter (partial match 7 "7_8_9_0"))
+      (mapcat (partial vary 7))
+      (mapcat (partial vary 8))
+      (filter (partial match 9 "6_7_8_9_0"))
+      (mapcat (partial vary 9))
+      (map #(- % placeholder))
+      (filter (partial match :all "1_2_3_4_5_6_7_8_9_0"))
+      first)))
+    
 ;; PROBLEM 297
 ;; s(n) := sum mu(k), 1<k<n.
 ;; One can obtain the following recursion:
@@ -540,6 +576,7 @@
 ;; this is far too slow due to the exponential explosion of coprime-pairs
 ;; even though this approach may be speeded up by using more symmetry in the sector
 ;; ((m,k) has as many hidden points as (k-m,k))
+
 (defn solve-351-slow
   ([] (solve-351-slow (int 1e8)))
   ([n]
@@ -560,6 +597,7 @@
 ;; coordinates (m,k), 0<=m<k, 0<k<=n and m,k coprime
 ;; but this is the sum of Euler's totient function from 1 to n
 ;; conveniently fast solution, about 2 minutes on dual core, 2.2 GHz
+
 (defn solve-351 
   ([] (solve-351 (int 1e8)))
   ([n]
