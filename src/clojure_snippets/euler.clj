@@ -503,10 +503,10 @@
                 (let [regex (-> pattern
                               (clojure.string/replace "_" "\\d")
                               re-pattern)
-                      dbl (str (* num num))
+                      sqr (str (* num num))
                       s (if (= :all len)
-                          dbl
-                          (subs dbl (- (count dbl) len)))]
+                          sqr
+                          (subs sqr (- (count sqr) len)))]
                   (re-matches regex s)))]
     (->> [placeholder]
       (mapcat (partial vary 0))
